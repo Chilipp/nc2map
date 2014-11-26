@@ -16,3 +16,4 @@ Main class for usage is the maps object class. A helper function
 for the formatoption keywords is show_settingdocs, displaying the
 documentation of all formatoption keywords.
 If you find any bugs, please do not hesitate to contact the authors.
+This is nc2map version 0.0beta, so there might be some bugs.

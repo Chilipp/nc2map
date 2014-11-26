@@ -22,14 +22,14 @@ Example usage:
 
 Load package via
 
-   import nc2map
+    import nc2map
 
 Assume you have a netCDF file named "myncfile.nc" with the variables
 "t2m" (temperature) and "pr" (pressure) and 4 timesteps.
 
 Simplest usage:
 
-   mymaps = nc2map.maps("myncfile.nc")
+    mymaps = nc2map.maps("myncfile.nc")
 
 will open two figures, one for each variable and for the first time
 step (time=0).

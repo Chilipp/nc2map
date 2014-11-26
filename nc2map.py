@@ -11,7 +11,7 @@ Requirements:
    - Python 2.7
    (May even work with older packages, but without warranty.)
 Main class for usage is the maps object class. A helper function 
-for the formatoption keywords is show_settingdocs, displaying the
+for the formatoption keywords is show_fmtkeys, displaying the
 documentation of all formatoption keywords.
 If you find any bugs, please do not hesitate to contact the authors.
 This is nc2map version 0.0beta, so there might be some bugs.
@@ -189,27 +189,27 @@ def update(fmt={}, add = True, delete = True, todefault = False, **kwargs):
   """Shortcut to the current maps instance update function"""
   currentmap.update(fmt,add,delete,todefault, **kwargs)
 
-def show_settingdocs(*args):
+def show_fmtkeys(*args):
   """Function which prints the keys and documentations in a readable manner.
   Arguments (*args) may be any keyword of the formatoptions (without: Print all);
   Keyword arguments may be wind = True if the wind options shall be displayed (has only an effect when windonly is not True)"""
   # docstring is just for information and will be replaced below with the docstring of maps instance
   if not 'wind' in args: myfmt = fieldfmt()
   else: myfmt = windfmt()
-  myfmt.show_settingdocs(*args)
+  myfmt.show_fmtkeys(*args)
 
-def get_settingdocs(*args):
+def get_fmtkeys(*args):
   """Function which returns a dictionary containing all possible formatoption settings as keys and their documentation as value.
   Arguments (*args) may be any keyword of the formatoptions;
   Keyword arguments may be wind = True if the wind options shall be displayed (has only an effect when windonly is not True)"""
   # docstring is just for information and will be replaced below with the docstring of maps instance
   if not 'wind' in args: myfmt = fieldfmt()
   else: myfmt = windfmt()
-  return myfmt.get_settingdocs(*args)
+  return myfmt.get_fmtkeys(*args)
 
 def get_docs(*args):
-  """shortcut for get_settingdocs"""
-  return get_settingdocs(*args)
+  """shortcut for get_fmtkeys"""
+  return get_fmtkeys(*args)
 
 class fmtproperties():
   """class containg property definitions of formatoption containers fmtBase and subclasses fieldfmt and windfmt"""
@@ -574,20 +574,37 @@ class fmtBase(object):
   
   # labels
   figtitle      = props.default('figtitle', """string (Default: None). Defines the figure suptitle of the
-                     plot""")
-  title         = props.default('title', """string (Default: None). Defines the title of the plot. This
-                     is the title of this specific axes! For the title of the
+                     plot. Strings <<<var>>>, <<<longname>>>, <<<unit>>>, 
+                     <<<time>>> and <<<level>>> will be replaced by the
+                     corresponding short or longnames, units, times or levels
+                     as stored in the netCDF file from all mapBase instances
+                     in the figure separated by comma.""")
+  title         = props.default('title', """string (Default: None). Defines the title of the plot. Strings
+                     <<<var>>>, <<<longname>>>, <<<unit>>>, <<<time>>> and 
+                     <<<level>>> will be replaced by the corresponding short
+                     or longname, unit, time or level as stored in the netCDF
+                     file.
+                     This is the title of this specific axes! For the title of the
                      figure see figtitle""")
   clabel        = props.default('clabel', """string (Default: None). Defines the label of the colorbar
-                     (if plotcbar is True).""")
+                     (if plotcbar is True). Strings <<<var>>>, <<<longname>>>,
+                     <<<unit>>>, <<<time>>> and <<<level>>> will be replaced by
+                     the corresponding short or longname, unit, time or level as
+                     stored in the netCDF file.""")
   ticklabels    = props.default('ticklabels', """Array. Defines the ticklabels of the colorbar""")
   text          = props.text('text', """Tuple or list of tuple (x,y,s[,coord.-system][,options]]) (Default:
                      []). Each list object defines a text instance on the plot.
-                     0<=x, y<=1 are the coordinates either in data coordinates (default, 'data') or
-                     in axes coordinates ('ax') or figure coordinate ('fig'). s (string) is
-                     the text. options might be options to specify 'color',
-                     'fontweight', 'fontsize', etc.. To remove one single text from the plot, set
-                     (x,y,'') for the text at position (x,y); to remove all set text=[]""")
+                     0<=x, y<=1 are the coordinates either in data coordinates
+                     (default, 'data') or in axes coordinates ('ax') or figure
+                     coordinate ('fig'). s (string) is the text. options might
+                     be options to specify 'color', 'fontweight', 'fontsize',
+                     etc.. To remove one single text from the plot, set
+                     (x,y,'') for the text at position (x,y); to remove all set
+                     text=[]. Strings <<<var>>>, <<<longname>>>, <<<unit>>>, 
+                     <<<time>>> and <<<level>>> will be replaced by the
+                     corresponding short or longnames, units, times or levels
+                     as stored in the netCDF file from all mapBase instances
+                     in the figure separated by comma.""")
   
   # basemap properties
   lonlatbox     = props.lonlatbox('lonlatbox', """1D-array [lon1,lon2,lat1,lat2] (Default: global, i.e.
@@ -656,7 +673,7 @@ class fmtBase(object):
   
   def __init__(self, **kwargs):
     """initialization and setting of default values. Key word arguments may be
-    any names of a property. Use show_settingdocs for possible keywords and
+    any names of a property. Use show_fmtkeys for possible keywords and
     their documentation"""
     # dictionary for default values. The default values and keys will be set during the initilization (this is implemented in the property definitions)
     self._default          = {}
@@ -729,7 +746,7 @@ class fmtBase(object):
       if key not in self._default:
         from difflib import get_close_matches
         similarkeys = get_close_matches(key, self._default.keys())
-        if similarkeys == []: sys.exit('Unknown formatoption keyword ' + key + '! See function show_settingdocs for possible formatopion keywords')
+        if similarkeys == []: sys.exit('Unknown formatoption keyword ' + key + '! See function show_fmtkeys for possible formatopion keywords')
         else: sys.exit('Unknown formatoption keyword ' + key + '! Possible similiar frasings are ' + ', '.join(key for key in similarkeys) + '.')
       else: setattr(self,key,val)
   
@@ -738,21 +755,21 @@ class fmtBase(object):
     fmt = {key[1:]:val for key, val in self.__dict__.items() if key[1:] in self._default.keys() and val != self._default[key[1:]]}
     return fmt
   
-  def get_settingdocs(self, *args):
+  def get_fmtkeys(self, *args):
     """Function which returns a dictionary containing all possible
     formatoption settings as keys and their documentation as value"""
     if args == (): return {key:getattr(self.__class__,key).__doc__ for key in self._default.keys()}
     else: return {key:getattr(self.__class__,key).__doc__ for key in args}
   
-  def show_settingdocs(self, *args):
+  def show_fmtkeys(self, *args):
     """Function which prints the keys and documentations of all 
     formatoption keywords in a readable manner"""
-    doc = self.get_settingdocs(*args)
+    doc = self.get_fmtkeys(*args)
     print '\n'.join((key+':').ljust(20) + doc[key] for key in sorted(doc.keys()))
   
 class fieldfmt(fmtBase):
   """Class to control the formatoptions of a fieldplot instance. See function 
-  show_settingdocs for formatoption keywords.
+  show_fmtkeys for formatoption keywords.
   """
   props = fmtproperties() # container containing methods for property definition
   
@@ -769,7 +786,7 @@ class fieldfmt(fmtBase):
   
   def __init__(self, **kwargs):
     """initialization and setting of default values. Key word arguments may be
-    any names of a property. Use show_settingdocs for possible keywords and
+    any names of a property. Use show_fmtkeys for possible keywords and
     their documentation"""
     super(fieldfmt, self).__init__()
     # first remove old keys
@@ -792,7 +809,7 @@ class fieldfmt(fmtBase):
       if key not in self._default:
         from difflib import get_close_matches
         similarkeys = get_close_matches(key, self._default.keys())
-        if similarkeys == []: sys.exit('Unknown formatoption keyword ' + key + '! See function show_settingdocs for possible formatopion keywords')
+        if similarkeys == []: sys.exit('Unknown formatoption keyword ' + key + '! See function show_fmtkeys for possible formatopion keywords')
         else: sys.exit('Unknown formatoption keyword ' + key + '! Possible similiar frasings are ' + ', '.join(key for key in similarkeys) + '.')
       else: setattr(self,key,val)
   
@@ -809,8 +826,8 @@ class fieldfmt(fmtBase):
       if key not in self._default:
         from difflib import get_close_matches
         similarkeys = get_close_matches(key, self._default.keys())
-        if similarkeys == []: sys.exit('Unknown formatoption keyword ' + key + '! See function show_settingdocs for possible formatopion keywords')
-        else: sys.exit('Unknown formatoption keyword ' + key + '! Possible similiar frasings are ' + ', '.join(key for key in similarkeys) + '. For more possible keyword formatoptions see function show_settingdocs')
+        if similarkeys == []: sys.exit('Unknown formatoption keyword ' + key + '! See function show_fmtkeys for possible formatopion keywords')
+        else: sys.exit('Unknown formatoption keyword ' + key + '! Possible similiar frasings are ' + ', '.join(key for key in similarkeys) + '. For more possible keyword formatoptions see function show_fmtkeys')
       else: setattr(self,key,val)
   
   def asdict(self):
@@ -827,7 +844,7 @@ class fieldfmt(fmtBase):
 
 class windfmt(fmtBase):
   """Class to control the formatoptions of a windplot instance. See function 
-  show_settingdocs for formatoption keywords.
+  show_fmtkeys for formatoption keywords.
   """
   props = fmtproperties() # container containing methods for property definition
   # ------------------ define properties here -----------------------
@@ -896,7 +913,7 @@ class windfmt(fmtBase):
   # initialization
   def __init__(self, **kwargs):
     """initialization and setting of default values. Key word arguments may be
-    any names of a property. Use show_settingdocs for possible keywords and
+    any names of a property. Use show_fmtkeys for possible keywords and
     their documentation"""
     super(windfmt, self).__init__()
     # Option dictionaries
@@ -927,7 +944,7 @@ class windfmt(fmtBase):
     else: fmt = {key[1:]:val for key, val in self.__dict__.items() if key[1:] in self._default.keys() and val != self._default[key[1:]] and key[1:] not in self._general}
     return fmt
   
-  def get_settingdocs(self, *args):
+  def get_fmtkeys(self, *args):
     """Function which returns a dictionary containing all possible
     formatoption settings as keys and their documentation as value.
     Use as args 'windonly' if only those keywords specific to the
@@ -939,14 +956,14 @@ class windfmt(fmtBase):
     elif 'windonly' in args: return {key:getattr(self.__class__,key).__doc__ for key in args if key not in self._general + ['windonly', 'wind']}
     else: return {key:getattr(self.__class__,key).__doc__ for key in args}
   
-  def show_settingdocs(self, *args):
-    super(windfmt, self).show_settingdocs(*args)
+  def show_fmtkeys(self, *args):
+    super(windfmt, self).show_fmtkeys(*args)
   
   def _removeoldkeys(self, entries):
     return entries
   
   # ------------------ modify docstrings here --------------------------
-  show_settingdocs.__doc__ = '    ' + fmtBase.show_settingdocs.__doc__ + "\n    Use as args 'windonly' if only those keywords specific to the\n    windfmt instance shall be shown."
+  show_fmtkeys.__doc__ = '    ' + fmtBase.show_fmtkeys.__doc__ + "\n    Use as args 'windonly' if only those keywords specific to the\n    windfmt instance shall be shown."
 
 class mapproperties():
   """class containg property definitions of class maps, mapBase, and subclasses"""
@@ -2209,25 +2226,25 @@ class maps(object):
                   fmt[var][time][level][option] = array[vlst.index(var),timelist.index(time),levellist.index(level)]
     return fmt
   
-  def get_settingdocs(self,*args):
+  def get_fmtkeys(self,*args):
     """Function which returns a dictionary containing all possible
     formatoption settings as keys and their documentation as value.
     Arguments (*args) may be any keyword of the formatoptions plus
     wind (to plot the 'wind' formatoption keywords) and 'windonly'
     (to plot the wind only formatoption keywords (i.e. not
     projection keywords, etc.))"""
-    if not 'wind' in args: return self.get_maps()[0].get_settingdocs(*args)
-    else: return self.get_winds()[0].get_settingdocs(*args)
+    if not 'wind' in args: return self.get_maps()[0].get_fmtkeys(*args)
+    else: return self.get_winds()[0].get_fmtkeys(*args)
   
-  def show_settingdocs(self,*args):
+  def show_fmtkeys(self,*args):
     """Function which prints the keys and documentations in a readable
     manner.
     Arguments (*args) may be any keyword of the formatoptions
     (without: Print all), plus wind (to plot the 'wind' formatoption
     keywords) and 'windonly' (to plot the wind only formatoption key-
     words (i.e. not projection keywords, etc.))"""
-    if not 'wind' in args: return self.get_maps()[0].get_settingdocs(*args)
-    else: return self.get_winds()[0].get_settingdocs(*args)
+    if not 'wind' in args: return self.get_maps()[0].get_fmtkeys(*args)
+    else: return self.get_winds()[0].get_fmtkeys(*args)
   
   # ------------------ modify docstrings here --------------------------
   __init__.__doc__   = __init__.__doc__ + '\n' + '\n'.join((key+':').ljust(20) + get_docs()[key] for key in sorted(get_docs().keys())) \
@@ -2242,8 +2259,8 @@ class mapBase(object):
   but to use the maps class. Nevertheless: for initialization see function __init__
   Methods are:
     - asdict: Returns the current formatoptions and variables, etc. as a dictionary
-    - get_settingdocs: Shortcut to the fmtBase instance get_settingdocs function
-    - show_settingdocs: Shortcut to the fmtBase instance show_settingdocs function
+    - get_fmtkeys: Shortcut to the fmtBase instance get_fmtkeys function
+    - show_fmtkeys: Shortcut to the fmtBase instance show_fmtkeys function
   Further Methods are defined in the subclasses fieldplot and windplot. For manual
   initilization use the _setupproj function after initilization before making the plot.
   """
@@ -2527,15 +2544,15 @@ class mapBase(object):
     if self.level != self.levelorig:     fmt.update({'level':self.level})
     return fmt
   
-  def get_settingdocs(self,*args):
+  def get_fmtkeys(self,*args):
     """Function which returns a dictionary containing all possible formatoption settings
-    as keys and their documentation as value (shortcut to self.fmt.get_settingdocs()"""
-    return self.fmt.get_settingdocs(*args)
+    as keys and their documentation as value (shortcut to self.fmt.get_fmtkeys()"""
+    return self.fmt.get_fmtkeys(*args)
   
-  def show_settingdocs(self,*args):
+  def show_fmtkeys(self,*args):
     """Function which prints the keys and documentations in a readable manner (shortcut
-    to self.fmt.show_settingdocs())"""
-    self.fmt.show_settingdocs(*args)
+    to self.fmt.show_fmtkeys())"""
+    self.fmt.show_fmtkeys(*args)
   
 class fieldplot(mapBase):
   props = mapproperties()
@@ -3043,5 +3060,5 @@ class windplot(mapBase):
                        for key in sorted(get_docs('wind').keys())) + '\nFurther keyword arguments (kwargs) inherited by mapBase object are:\n' + mapBase.__init__.__doc__
 # ------------------ modify docstrings on module level here --------------------------
 update.__doc__ = update.__doc__ + '\n' + maps.update.__doc__
-get_settingdocs.__doc__ = maps.get_settingdocs.__doc__
-show_settingdocs.__doc__ = maps.show_settingdocs.__doc__
+get_fmtkeys.__doc__ = maps.get_fmtkeys.__doc__
+show_fmtkeys.__doc__ = maps.show_fmtkeys.__doc__

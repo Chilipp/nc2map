@@ -32,9 +32,10 @@ from itertools import izip, chain
 currentmap = None
 openmaps = []
 cmapnames = { # names of self defined colormaps (see get_cmap function below)
-             'red_white_blue':[(1, 0, 0), (1, 0.5, 0), (1, 1, 0), (1, 1., 1), (1, 1., 1), (0, 1, 1), (0, 0.5, 1), (0, 0, 1)], # water fluxes
-             'blue_white_red':[(0, 0, 1), (0, 0.5, 1), (0, 1, 1), (1, 1., 1), (1, 1., 1), (1, 1, 0), (1, 0.5, 0), (1, 0, 0)], # temperature
-             'white_blue_red':[(1, 1., 1), (0, 0, 1), (0, 1, 1), (1, 1, 0), (1, 0, 0)] # symmetric temperature
+             'red_white_blue':[(1, 0, 0), (1, 0.5, 0), (1, 1, 0), (1, 1., 1), (1, 1., 1), (0, 1, 1), (0, 0.5, 1), (0, 0, 1)], # symmetric water fluxes
+             'blue_white_red':[(0, 0, 1), (0, 0.5, 1), (0, 1, 1), (1, 1., 1), (1, 1., 1), (1, 1, 0), (1, 0.5, 0), (1, 0, 0)], # symmetric temperature
+             'white_blue_red':[(1, 1., 1), (0, 0, 1), (0, 1, 1), (1, 1, 0), (1, 0, 0)], # temperature
+             'white_red_blue':[(1, 1., 1), (1, 0, 0), (1, 1, 0), (0, 1, 1), (0, 0, 1)] # water fluxes
             }
 
 
@@ -123,19 +124,20 @@ def returnbounds(data, bounds):
       tile must have length 2 with [minperc, maxperc]
     + string: same as tuple with N automatically set to 11
   """
+  from copy import deepcopy
   exp=np.floor(np.log10(abs(np.max(data)-np.min(data))))
   if type(bounds) is str: bounds = (bounds, 11)
   if isinstance(bounds[0], str):
     N=bounds[1]
     # take percentiles as boundary definitions
     if len(bounds) == 3:
-      perc = bounds[2]
+      perc = deepcopy(bounds[2])
       if perc[0] == 0:	perc[0] = np.min(data)
       else:	perc[0] = np.percentile(data,perc[0])
       if perc[1] == 100:	perc[1] = np.max(data)
       else:	perc[1] = np.percentile(data,perc[1])
       if perc[1] == perc[0]:	print('Attention!: Maximum and Minimum bounds are the same! Using max value for maximal bound.'); perc[1]=np.max(data)
-      data = np.ma.masked_outside(data, perc[0], perc[1], copy = True)
+      data = deepcopy(np.ma.masked_outside(data, perc[0], perc[1], copy = True))
     if bounds[0] == 'rounded':
       cmax = np.max((round_to_05(np.max(data), exp, np.ceil), round_to_05(np.max(data), exp, np.floor)))
       cmin = np.min((round_to_05(np.min(data), exp, np.floor), round_to_05(np.min(data), exp, np.ceil)))
@@ -219,6 +221,15 @@ class fmtproperties():
     def setx(self,value):
       setattr(self, '_' + x, value)
       self._default.setdefault(x, getattr(self, '_' + x))
+    def delx(self): setattr(self, '_'+x,self._default[x])
+    return property(getx,setx,delx,doc)
+  def bmprop(self,x,doc):
+    """default basemap property (currently not in use)"""
+    def getx(self): return getattr(self,'_'+x)
+    def setx(self,value):
+      setattr(self, '_' + x, value)
+      self._default.setdefault(x, getattr(self, '_' + x))
+      if x not in self._bmprops: self._bmprops.append(x)
     def delx(self): setattr(self, '_'+x,self._default[x])
     return property(getx,setx,delx,doc)
   def cmap(self, x, doc):
@@ -524,6 +535,8 @@ class fmtBase(object):
                      Possible strings are
                        - 'red_white_blue' (e.g. for symmetric precipitation color-
                           bars)
+                       - 'white_red_blue' (e.g. for asymmetric precipitation color-
+                          bars)
                        - 'blue_white_red' (e.g. for symmetric temperature colorbars)
                        - 'white_blue_red' (e.g. for asymmetric temperature colorbars)
                        - any other name of a standard colorbar as provided by pyplot
@@ -531,7 +544,7 @@ class fmtBase(object):
                          nc2map.show_colormaps to visualize them.""")
   ticks         = props.cmapprop('ticks', """1D-array or integer (Default: None). Define the ticks of the
                      colorbar. In case of an integer i, every i-th value of the
-                     default ticks will be used.""")
+                     default ticks will be used (might not work always).""")
   extend        = props.cmapprop('extend', """string  (‘neither’, ‘both’, ‘min’ or ‘max’) (Default:
                      'neither'). If not ‘neither’, make pointed end(s) for out-of-
                      range values. These are set for a given colormap using the 
@@ -643,8 +656,16 @@ class fmtBase(object):
   lsm           = props.default('lsm', """Boolean (Default: True). If True, the continents will be plot-
                      tet.""")
   countries     = props.default('countries', """Boolean (Default: False). If True, draw country borders.""")
-  land_color    = props.default('land_color', """color instance (Default: white). Specify the color of the land""")
-  ocean_color   = props.default('ocean_color', """color instance (Default: white). Specify the color of the ocean""")
+  land_color    = props.default('land_color', """color instance (Default: 'w'). Specify the color of the land.
+                     Attention! Might reduce the performance a lot if many figures
+                     are opened! To not kill everything. There is not update method
+                     for land_color and ocean_color. You need to reset the maps
+                     instance.""")
+  ocean_color   = props.default('ocean_color', """color instance (Default: 'w'). Specify the color of the ocean.
+                     Attention! Might reduce the performance a lot if many figures
+                     are opened! To not kill everything. There is not update method
+                     for land_color and ocean_color. You need to reset the maps
+                     instance.""")
   
   # Colorcode properties
   bounds        = props.bounds('bounds',"""1D-array, tuple or string (Default:('rounded', 11): Defines the
@@ -1793,7 +1814,8 @@ class maps(object):
           if cbarops['plotcbar'] == True: cbarops['plotcbar'] = 'b'
           cbar._removecbar([cbarpos for cbarpos in cbar.fmt.plotcbar if cbarpos not in cbarops['plotcbar']])
         cbar.fmt.update(**cbarops)
-        if cbar.fmt.bounds[0] in ['rounded', 'sym', 'minmax', 'roundedsym']: cbar._bounds = returnbounds(map(lambda x: (np.min(x), np.max(x)), (mapo.data for mapo in cbar.maps)), cbar.fmt.bounds)
+        if cbar.fmt.bounds[0] in ['rounded', 'sym', 'minmax', 'roundedsym'] and len(cbar.fmt.bounds) == 2: print('not okay'); cbar._bounds = returnbounds(map(lambda x: (np.min(x), np.max(x)), (mapo.data for mapo in cbar.maps)), cbar.fmt.bounds)
+        elif cbar.fmt.bounds[0] in ['rounded', 'sym', 'minmax', 'roundedsym'] and len(cbar.fmt.bounds) == 3: cbar._bounds = returnbounds(np.ma.concatenate(tuple(mapo.data for mapo in cbar.maps)), cbar.fmt.bounds)
         else: cbar._bounds = cbar.fmt.bounds
         cbar._cmap   = get_cmap(cbar.fmt.cmap, N=len(cbar._bounds)-1)
         cbar._norm   = mpl.colors.BoundaryNorm(cbar._bounds, cbar._cmap.N)
@@ -2373,24 +2395,26 @@ class mapBase(object):
       if self.wind is not None:
         self.wind._removeplot()
         self.wind._removecbar(['b','r'])
+    basemapops = {}
     # create basemap
     mapproj = bm.Basemap(**self.fmt._projops)
     # draw coastlines
-    if self.fmt.lsm: mapproj.drawcoastlines()
+    if self.fmt.lsm: basemapops['lsm']=mapproj.drawcoastlines()
     # color the ocean
-    if self.fmt.ocean_color is not None: mapproj.drawlsmask(land_color=self.fmt.land_color, ocean_color=self.fmt.ocean_color)
+    if self.fmt.ocean_color is not None: basemapops['lsmask']=mapproj.drawlsmask(land_color=self.fmt.land_color, ocean_color=self.fmt.ocean_color)
     # draw parallels
-    self._parallels = mapproj.drawparallels(self.fmt._paraops['parallels'], **{key:value for key, value in self.fmt._paraops.items() if key != 'parallels'})
+    basemapops['parallels'] = mapproj.drawparallels(self.fmt._paraops['parallels'], **{key:value for key, value in self.fmt._paraops.items() if key != 'parallels'})
     # draw meridians
-    self._meridians = mapproj.drawmeridians(self.fmt._meriops['meridionals'], **{key:value for key, value in self.fmt._meriops.items() if key != 'meridionals'})
+    basemapops['meridionals'] = mapproj.drawmeridians(self.fmt._meriops['meridionals'], **{key:value for key, value in self.fmt._meriops.items() if key != 'meridionals'})
     # draw countries
-    if self.fmt.countries: mapproj.drawcountries()
+    if self.fmt.countries: basemapops['countries']=mapproj.drawcountries()
     # configure longitude and latitude
     self.lon2d, self.lat2d = mapproj(self.lon2d, self.lat2d)
     # configure title
     self._configuretitles()
     # save mapproj to attribute
     setattr(self, 'mapproj', mapproj)
+    setattr(self,'_basemapops', basemapops)
   
   def _get_data(self, name, time, level):
     """Function to get the data of variable var from the netCDF file for the time
@@ -2657,20 +2681,26 @@ class fieldplot(mapBase):
       self._reinit(**newdims)
       if self.wind is not None:
         self.wind._reinit()
-    if bmprops != {} and plot: self._setupproj()
+    if (bmprops != {} or 'tight' in kwargs) and plot: self._setupproj()
     
     # update rest
     self.fmt.update(**{key:value for key, value in kwargs.items() if key not in self.fmt._bmprops + dims.keys()})
     if 'meridionals' in kwargs or 'merilabelpos' in kwargs:
-      keys = self._meridians.keys()
-      for key in keys: del self._meridians[key]
+      keys = self.basemapops['meridionals'].keys()
+      for key in keys: del self.basemapops['meridionals'][key]
       self.fmt.meridionals = self.fmt.meridionals
-      if plot: self._meridians = self.mapproj.drawmeridians(self.fmt._meriops['meridionals'], **{key:value for key, value in self.fmt._meriops.items() if key != 'meridionals'})
+      if plot: self.basemapops['meridionals'] = self.mapproj.drawmeridians(self.fmt._meriops['meridionals'], **{key:value for key, value in self.fmt._meriops.items() if key != 'meridionals'})
     if 'parallels' in kwargs or 'paralabelpos' in kwargs:
-      keys = self._parallels.keys()
-      for key in keys: del self._parallels[key]
+      keys = self.basemapops['parallels'].keys()
+      for key in keys: del self.basemapops['parallels'][key]
       self.fmt.parallels = self.fmt.parallels
-      if plot: self._parallels = self.mapproj.drawparallels(self.fmt._paraops['parallels'], **{key:value for key, value in self.fmt._paraops.items() if key != 'parallels'})
+      if plot: self.basemapops['parallels'] = self.mapproj.drawparallels(self.fmt._paraops['parallels'], **{key:value for key, value in self.fmt._paraops.items() if key != 'parallels'})
+    if 'lsm' in kwargs:
+      if 'lsm' in self._basemapops: self._basemapops['lsm'].remove(); del self._basemapops['lsm']
+      if kwargs['lsm']: self._basemapops=self.mapproj.drawcoastlines()
+    if 'countries' in kwargs:
+      if 'countries' in self._basemapops: self._basemapops['countries'].remove(); del self._basemapops['countries']
+      if kwargs['countries']: self._basemapops['countries'] = self.mapproj.drawcountries()
     # update wind
     if self.wind is not None or 'windplot' in kwargs:
       if 'windplot' in kwargs:
@@ -2952,14 +2982,14 @@ class windplot(mapBase):
     # update rest
     self.fmt.update(**{key:value for key, value in kwargs.items() if key not in self.fmt._bmprops + dims.keys()})
     if 'meridionals' in kwargs or 'merilabelpos' in kwargs:
-      keys = self._meridians.keys()
-      for key in keys: del self._meridians[key]
-      if plot: self._meridians = self.mapproj.drawmeridians(self.fmt._meriops['meridionals'], **{key:value for key, value in self.fmt._meriops.items() if key != 'meridionals'})
+      keys = self.basemapops['meridionals'].keys()
+      for key in keys: del self.basemapops['meridionals'][key]
+      if plot: self.basemapops['meridionals'] = self.mapproj.drawmeridians(self.fmt._meriops['meridionals'], **{key:value for key, value in self.fmt._meriops.items() if key != 'meridionals'})
     if 'parallels' in kwargs or 'paralabelpos' in kwargs:
-      keys = self._parallels.keys()
-      for key in keys: del self._parallels[key]
+      keys = self.basemapops['parallels'].keys()
+      for key in keys: del self.basemapops['parallels'][key]
       self.fmt.parallels = self.fmt.parallels
-      if plot: self._parallels = self.mapproj.drawparallels(self.fmt._paraops['parallels'], **{key:value for key, value in self.fmt._paraops.items() if key != 'parallels'})
+      if plot: self.basemapops['parallels'] = self.mapproj.drawparallels(self.fmt._paraops['parallels'], **{key:value for key, value in self.fmt._paraops.items() if key != 'parallels'})
     
     
     if plot: self._configuretitles()

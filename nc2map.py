@@ -1285,7 +1285,7 @@ class maps(object):
   nco            = props.nco('nco', """netCDF4.MFDataset instance of ncfile""")
   
   
-  def __init__(self, ncfile, vlst = 'all',  times = 0, levels = 0, ax = (1,1), sort = 'vtl', fmt = None, timenames = ['time'], levelnames = ['level', 'lvl', 'lev'], lon=['lon', 'longitude', 'x'], lat=['lat', 'latitude', 'y'], windonly=False, onecbar = False, u=None, v=None, figsize = None):
+  def __init__(self, ncfile, vlst = 'all',  times = 0, levels = 0, ax = (1,1), sort = 'vtl', formatoptions = None, timenames = ['time'], levelnames = ['level', 'lvl', 'lev'], lon=['lon', 'longitude', 'x'], lat=['lat', 'latitude', 'y'], windonly=False, onecbar = False, u=None, v=None, figsize = None):
     """
     Input:
       - ncfile: string or 1D-array of strings. Path to the netCDF-file containing the
@@ -1814,7 +1814,7 @@ class maps(object):
           if cbarops['plotcbar'] == True: cbarops['plotcbar'] = 'b'
           cbar._removecbar([cbarpos for cbarpos in cbar.fmt.plotcbar if cbarpos not in cbarops['plotcbar']])
         cbar.fmt.update(**cbarops)
-        if cbar.fmt.bounds[0] in ['rounded', 'sym', 'minmax', 'roundedsym'] and len(cbar.fmt.bounds) == 2: print('not okay'); cbar._bounds = returnbounds(map(lambda x: (np.min(x), np.max(x)), (mapo.data for mapo in cbar.maps)), cbar.fmt.bounds)
+        if cbar.fmt.bounds[0] in ['rounded', 'sym', 'minmax', 'roundedsym'] and len(cbar.fmt.bounds) == 2: cbar._bounds = returnbounds(map(lambda x: (np.min(x), np.max(x)), (mapo.data for mapo in cbar.maps)), cbar.fmt.bounds)
         elif cbar.fmt.bounds[0] in ['rounded', 'sym', 'minmax', 'roundedsym'] and len(cbar.fmt.bounds) == 3: cbar._bounds = returnbounds(np.ma.concatenate(tuple(mapo.data for mapo in cbar.maps)), cbar.fmt.bounds)
         else: cbar._bounds = cbar.fmt.bounds
         cbar._cmap   = get_cmap(cbar.fmt.cmap, N=len(cbar._bounds)-1)
@@ -1936,7 +1936,7 @@ class maps(object):
           isubplot+=1
     return  
   
-  def make_movie(self, output, fmt={}, onecbar = {}, steps = 'all', *args, **kwargs):
+  def make_movie(self, output, fmt={}, cbarfmt = {}, steps = 'all', *args, **kwargs):
     """Function to create a movie with the current settings.
     Input:
       - output: string or 1D-array of strings. If string: <<<var>>>,

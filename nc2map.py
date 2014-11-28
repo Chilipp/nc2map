@@ -80,12 +80,12 @@ def show_colormaps(*args):
   # Get a list of the colormaps in matplotlib.  Ignore the ones that end with
   # '_r' because these are simply reversed versions of ones that don't end
   # with '_r'
-  for arg in (arg for arg in args if arg not in plt.cm.datad.keys()): 
-    similarkeys = get_close_matches(arg, plt.cm.datad.keys())
+  for arg in (arg for arg in args if arg not in plt.cm.datad.keys() + cmapnames.keys()): 
+    similarkeys = get_close_matches(arg, plt.cm.datad.keys()+cmapnames.keys())
     if similarkeys != []: print("Colormap " + arg + " not found in standard colormaps. Similar colormaps are " + ', '.join(key for key in similarkeys))
     else: print("Colormap " + arg + " not found in standard colormaps. Run function without arguments to see all colormaps")
-  if args == (): maps = sorted(m for m in plt.cm.datad.keys()+cmapnames if not m.endswith("_r"))
-  else: maps = sorted(m for m in plt.cm.datad.keys()+cmapnames if m in args)
+  if args == (): maps = sorted(m for m in plt.cm.datad.keys()+cmapnames.keys() if not m.endswith("_r"))
+  else: maps = sorted(m for m in plt.cm.datad.keys()+cmapnames.keys() if m in args)
   nmaps = len(maps) + 1
   fig = plt.figure(figsize=(5,10))
   fig.subplots_adjust(top=0.99, bottom=0.01, left=0.2, right=0.99)

@@ -1285,7 +1285,7 @@ class maps(object):
   nco            = props.nco('nco', """netCDF4.MFDataset instance of ncfile""")
   
   
-  def __init__(self, ncfile, vlst = 'all',  times = 0, levels = 0, ax = (1,1), sort = 'vtl', formatoptions = None, timenames = ['time'], levelnames = ['level', 'lvl', 'lev'], lon=['lon', 'longitude', 'x'], lat=['lat', 'latitude', 'y'], windonly=False, onecbar = False, u=None, v=None, figsize = None):
+  def __init__(self, ncfile, vlst = 'all',  times = 0, levels = 0, ax = (1,1), sort = 'vtl', fmt = None, timenames = ['time'], levelnames = ['level', 'lvl', 'lev'], lon=['lon', 'longitude', 'x'], lat=['lat', 'latitude', 'y'], windonly=False, onecbar = False, u=None, v=None, figsize = None):
     """
     Input:
       - ncfile: string or 1D-array of strings. Path to the netCDF-file containing the
@@ -1936,7 +1936,7 @@ class maps(object):
           isubplot+=1
     return  
   
-  def make_movie(self, output, fmt={}, cbarfmt = {}, steps = 'all', *args, **kwargs):
+  def make_movie(self, output, fmt={}, onecbar = {}, steps = 'all', *args, **kwargs):
     """Function to create a movie with the current settings.
     Input:
       - output: string or 1D-array of strings. If string: <<<var>>>,

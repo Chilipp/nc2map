@@ -23,9 +23,10 @@ __author__  = "Philipp Sommer (philipp.sommer@studium.uni-hamburg.de)"
 import numpy as np
 import matplotlib as mpl
 import matplotlib.pyplot as plt
+from difflib import get_close_matches
+import glob
 from matplotlib.animation import FuncAnimation
 import mpl_toolkits.basemap as bm
-import sys
 import netCDF4 as nc
 from itertools import izip, chain
 
@@ -74,7 +75,6 @@ def show_colormaps(*args):
   # unclear who the original author is."""
   import numpy as np
   import matplotlib.pyplot as plt
-  from difflib import get_close_matches
   a = np.linspace(0, 1, 256).reshape(1,-1)
   a = np.vstack((a,a))
   # Get a list of the colormaps in matplotlib.  Ignore the ones that end with
@@ -133,9 +133,9 @@ def returnbounds(data, bounds):
     if len(bounds) == 3:
       perc = deepcopy(bounds[2])
       if perc[0] == 0:	perc[0] = np.min(data)
-      else:	perc[0] = np.percentile(data,perc[0])
+      else:	perc[0] = np.percentile(np.ma.compressed(data),perc[0])
       if perc[1] == 100:	perc[1] = np.max(data)
-      else:	perc[1] = np.percentile(data,perc[1])
+      else:	perc[1] = np.percentile(np.ma.compressed(data),perc[1])
       if perc[1] == perc[0]:	print('Attention!: Maximum and Minimum bounds are the same! Using max value for maximal bound.'); perc[1]=np.max(data)
       data = deepcopy(np.ma.masked_outside(data, perc[0], perc[1], copy = True))
     if bounds[0] == 'rounded':
@@ -180,10 +180,12 @@ def gcm():
 
 def scm(mymaps):
   """Sets the current maps instance"""
+  global currentmap
   currentmap = mymaps
 
 def close():
   """close all open maps instances"""
+  global openmaps
   for mymaps in openmaps: mymaps.close()
   openmaps = []
 
@@ -765,10 +767,9 @@ class fmtBase(object):
     All key words of initialization are possible."""
     for key, val in kwargs.items():
       if key not in self._default:
-        from difflib import get_close_matches
         similarkeys = get_close_matches(key, self._default.keys())
-        if similarkeys == []: sys.exit('Unknown formatoption keyword ' + key + '! See function show_fmtkeys for possible formatopion keywords')
-        else: sys.exit('Unknown formatoption keyword ' + key + '! Possible similiar frasings are ' + ', '.join(key for key in similarkeys) + '.')
+        if similarkeys == []: raise KeyError('Unknown formatoption keyword ' + key + '! See function show_fmtkeys for possible formatopion keywords')
+        else: raise KeyError('Unknown formatoption keyword ' + key + '! Possible similiar frasings are ' + ', '.join(key for key in similarkeys) + '.')
       else: setattr(self,key,val)
   
   def asdict(self):
@@ -828,10 +829,9 @@ class fieldfmt(fmtBase):
     
     for key, val in kwargs.items():
       if key not in self._default:
-        from difflib import get_close_matches
         similarkeys = get_close_matches(key, self._default.keys())
-        if similarkeys == []: sys.exit('Unknown formatoption keyword ' + key + '! See function show_fmtkeys for possible formatopion keywords')
-        else: sys.exit('Unknown formatoption keyword ' + key + '! Possible similiar frasings are ' + ', '.join(key for key in similarkeys) + '.')
+        if similarkeys == []: raise KeyError('Unknown formatoption keyword ' + key + '! See function show_fmtkeys for possible formatopion keywords')
+        else: raise KeyError('Unknown formatoption keyword ' + key + '! Possible similiar frasings are ' + ', '.join(key for key in similarkeys) + '.')
       else: setattr(self,key,val)
   
   def update(self,updatewind=False,**kwargs):
@@ -845,10 +845,9 @@ class fieldfmt(fmtBase):
       self.windplot.update(**windops)
     for key, val in kwargs.items():
       if key not in self._default:
-        from difflib import get_close_matches
         similarkeys = get_close_matches(key, self._default.keys())
-        if similarkeys == []: sys.exit('Unknown formatoption keyword ' + key + '! See function show_fmtkeys for possible formatopion keywords')
-        else: sys.exit('Unknown formatoption keyword ' + key + '! Possible similiar frasings are ' + ', '.join(key for key in similarkeys) + '. For more possible keyword formatoptions see function show_fmtkeys')
+        if similarkeys == []: raise KeyError('Unknown formatoption keyword ' + key + '! See function show_fmtkeys for possible formatopion keywords')
+        else: raise KeyError('Unknown formatoption keyword ' + key + '! Possible similiar frasings are ' + ', '.join(key for key in similarkeys) + '. For more possible keyword formatoptions see function show_fmtkeys')
       else: setattr(self,key,val)
   
   def asdict(self):
@@ -956,7 +955,7 @@ class windfmt(fmtBase):
     self.legend          = None
     for key, val in kwargs.items():
       if key not in self._default:
-        sys.exit('Unknown formatoption keyword ' + key + '!')
+        raise KeyError('Unknown formatoption keyword ' + key + '!')
       else: setattr(self,key,val)
   
   def asdict(self, general = True):
@@ -1014,7 +1013,7 @@ class mapproperties():
         for name in names:
           try: setattr(self, '_'+x,self.nco.variables[name][:]); exist = True; break
           except KeyError: exist = False
-        if not exist: sys.exit('Unknown dimension name ' + name + '! Possible keys in the ncfile are ' + ','.join(key for key in self.nco.variables.keys()))
+        if not exist: raise KeyError('Unknown dimension name ' + str(names) + '! Possible keys in the ncfile are ' + ','.join(key for key in self.nco.variables.keys()))
       except TypeError: setattr(self, '_'+x, names)
     def delx(self): delattr(self,'_'+x)
     return property(getx,setx,delx,doc)
@@ -1040,7 +1039,10 @@ class mapproperties():
       return getattr(self,'_'+x)
     def setx(self,value): 
       if value is None:
-        setattr(self, '_' + x, nc.MFDataset(self.fname))
+        try: setattr(self, '_' + x, nc.MFDataset(self.fname))
+        except ValueError:
+          print("netCDF4.MFDataset does not work. Using netCDF4.Dataset restricted to one single nc-file")
+          setattr(self, '_' + x, nc.Dataset(self.fname))
       else:
         setattr(self, '_' + x, value)
     def delx(self):
@@ -1101,6 +1103,7 @@ class mapproperties():
       try:
         from cdo import Cdo
         import glob
+        import os
         cdo = Cdo()
         tmpfile='tmp_' + str(np.random.randint(0,100000)) + '.nc'
         cdo.gridweights(input=glob.glob(self.fname)[0], output=tmpfile)
@@ -1173,8 +1176,8 @@ class cbarmanager(object):
         orientations = ['horizontal', 'vertical', 'horizontal', 'vertical']
         cbarlabels   = ['b','r','sh','sv']
         if cbarpos not in cbarlabels:
-          try: sys.exit('Unknown position option ' + str(cbarpos) + '! Please use one of ' + ', '.join(label for label in cbarlabels) + '.')
-          except KeyError: sys.exit('Unknown position option for the colorbar! Please use one of ' + ', '.join(label for label in cbarlabels) + '.')
+          try: raise KeyError('Unknown position option ' + str(cbarpos) + '! Please use one of ' + ', '.join(label for label in cbarlabels) + '.')
+          except KeyError: raise KeyError('Unknown position option for the colorbar! Please use one of ' + ', '.join(label for label in cbarlabels) + '.')
         self.cbar[cbarpos] = {}
         orientation = orientations[cbarlabels.index(cbarpos)]
         if cbarpos in ['b','r']:
@@ -1285,7 +1288,7 @@ class maps(object):
   nco            = props.nco('nco', """netCDF4.MFDataset instance of ncfile""")
   
   
-  def __init__(self, ncfile, vlst = 'all',  times = 0, levels = 0, ax = (1,1), sort = 'vtl', formatoptions = None, timenames = ['time'], levelnames = ['level', 'lvl', 'lev'], lon=['lon', 'longitude', 'x'], lat=['lat', 'latitude', 'y'], windonly=False, onecbar = False, u=None, v=None, figsize = None):
+  def __init__(self, ncfile, vlst = 'all',  times = 0, levels = 0, ax = (1,1), sort = 'vtl', fmt = None, timenames = ['time'], levelnames = ['level', 'lvl', 'lev'], lon=['lon', 'longitude', 'x'], lat=['lat', 'latitude', 'y'], windonly=False, onecbar = False, u=None, v=None, figsize = None):
     """
     Input:
       - ncfile: string or 1D-array of strings. Path to the netCDF-file containing the
@@ -1330,9 +1333,9 @@ class maps(object):
         maps object) and 'formatoption keyword' may be any regular key word of the formatoptions
         controlling the colorbar ('cmap', 'bounds', 'clabel', 'plotcbar', etc.). To update those
         colorbars. Use the update_cbar function.
-      - formatoptions: dictionary (Default: None). Dictionary controlling the format of the plots.
+      - fmt: dictionary (Default: None). Dictionary controlling the format of the plots.
         Syntax is as follows:
-        formatoptions = {['<<<var>>>':{
+        fmt = {['<<<var>>>':{
                                        ['t<<<time>>>':{
                                                        ['l<<<level>>>':{'keyword':..., ...}]
                                                        [, 'keyword':...,...]
@@ -1353,14 +1356,14 @@ class maps(object):
              't<<<time>>>' or 'l<<<level>>>' respectively (where <<<time>>> and <<<level>>>
              is the number of the time, and or level).
           -- To set default formatoptions for each map: set the keyword in the upper most hierarchical
-             level of formatoptions (e.g. formatoptions = {'plotcbar':'r'}).
+             level of formatoptions (e.g. fmt = {'plotcbar':'r'}).
           -- To set default formatoptions for each variable, times or level separately set the keyword
-             in the second hierarchical level of formatoptions (e.g. formatoptions = {'t4':{'plotcbar:'r'}}
+             in the second hierarchical level of formatoptions (e.g. fmt = {'t4':{'plotcbar:'r'}}
              will only change the formatoptions of maps with time equal to 4,
-             formatoptions = {'l4':{'plotcbar:'r'}} will only change formatoptions of maps with level
+             fmt = {'l4':{'plotcbar:'r'}} will only change formatoptions of maps with level
              equal to 4).
           -- To set default options for a specific variable and time, but all levels: put them in the 3rd
-             hierarchical level of formatoptions (e.g. formatoptions = {<<<var>>>:{'t4':{'plotcbar':'r'}}}
+             hierarchical level of formatoptions (e.g. fmt = {<<<var>>>:{'t4':{'plotcbar':'r'}}}
              will only change the formatoptions of each level corresponding to variable <<<var>>> and
              time 4). Works the same for setting default options for specific variable and level, but all
              times.
@@ -1378,7 +1381,7 @@ class maps(object):
     self.maps = {}
     self._cbars = []
     self.fname = ncfile
-    self.nco = nc.MFDataset(ncfile)
+    self.nco = None
     self.lonnames  = lon
     self.latnames  = lat
     self.timenames = timenames
@@ -1400,7 +1403,7 @@ class maps(object):
     self.v  = v
     self.windonly = windonly
     self._initcompatible = False # do not add maps compatible to initialization but according to the times, vars and levels as specified in the formatoptions
-    self._setupfigs(self._setupfmt(formatoptions))
+    self._setupfigs(self._setupfmt(fmt))
     
     print("Setting up projections...")
     for mapo in self.get_maps(): mapo._setupproj()
@@ -1484,7 +1487,7 @@ class maps(object):
     if args == (): maps = get_func(**kwargs); figs = {}; append = True
     elif all(isinstance(arg, mapBase) for arg in args): maps = args; figs = {}; append = True
     elif all(isinstance(arg, mpl.figure.Figure) for arg in args): figs = {arg:[] for arg in args}; maps = get_func(); append = False
-    else: print args, kwargs; sys.exit("Wrong type of obj! Object must either be 'maps' or 'winds'!")
+    else: raise TypeError("Wrong type of obj! Object must either be 'maps' or 'winds'!")
     for mapo in maps:
       if mapo.ax.get_figure() not in figs and append: figs[mapo.ax.get_figure()] = []
       if mapo.ax.get_figure() in figs: figs[mapo.ax.get_figure()].append(mapo)
@@ -1542,10 +1545,10 @@ class maps(object):
     else: pass
     # test output
     try:
-      if len(np.shape(output)) > 1: sys.exit('Output array must be a 1D-array!')
-      if len(figs) != len(output): sys.exit('Length of output names (' + str(len(output)) + ') does not fit to the number of figures (' + str(len(figs)) + ').')
+      if len(np.shape(output)) > 1: raise ValueError('Output array must be a 1D-array!')
+      if len(figs) != len(output): raise ValueError('Length of output names (' + str(len(output)) + ') does not fit to the number of figures (' + str(len(figs)) + ').')
     except TypeError:
-      sys.exit('Output names must be either a string or an 1D-array of strings!')
+      raise TypeError('Output names must be either a string or an 1D-array of strings!')
     for fig in figs:
       fig.savefig(output[figs.index(fig)], **saveops)
       print('Plot saved to ' + output[figs.index(fig)])
@@ -1633,9 +1636,9 @@ class maps(object):
         current settings will be used and if ax is None, no new figures
         will be created).
       """
-    if self._fmt == []: sys.exit('Impossible option')
-    if num > 0 and num >= len(self._fmt)-1: sys.exit('Too high number! Maximal number is ' + str(len(self._fmt)-1))
-    elif num < 0 and num < -len(self._fmt): sys.exit('Too small number! Minimal number is ' + str(-len(self._fmt)+1))
+    if self._fmt == []: raise ValueError('Impossible option')
+    if num > 0 and num >= len(self._fmt)-1: raise ValueError('Too high number! Maximal number is ' + str(len(self._fmt)-1))
+    elif num < 0 and num < -len(self._fmt): raise ValueError('Too small number! Minimal number is ' + str(-len(self._fmt)+1))
     self._initcompatible = True
     self._reorder()
     if sort is not None: self.sort = sort
@@ -1687,9 +1690,9 @@ class maps(object):
     
   def undo(self, num=-1):
     """Undo the changes made. num gives the number of changes to go back."""
-    if self._fmt == [] or len(self._fmt) == 1: sys.exit('Impossible option')
-    if num > 0 and num >= len(self._fmt)-1: sys.exit('Too high number! Maximal number is ' + str(len(self._fmt)-1))
-    elif num < 0 and num < -len(self._fmt): sys.exit('Too small number! Minimal number is ' + str(-len(self._fmt)+1))
+    if self._fmt == [] or len(self._fmt) == 1: raise ValueError('Impossible option')
+    if num > 0 and num >= len(self._fmt)-1: raise ValueError('Too high number! Maximal number is ' + str(len(self._fmt)-1))
+    elif num < 0 and num < -len(self._fmt): raise ValueError('Too small number! Minimal number is ' + str(-len(self._fmt)+1))
     self._initcompatible = True
     self._reorder()
     if self._fmt[num-1][1] == []: self.removecbars()
@@ -1704,16 +1707,16 @@ class maps(object):
     
   def redo(self, num=1):
     """Redo the changes made. num gives the number of changes to use."""
-    if self._newfmt == []: sys.exit('Impossible option')
-    if num > 0 and num > len(self._newfmt): sys.exit('Too high number! Maximal number is ' + str(len(self._newfmt)))
-    elif num < 0 and num < -len(self._newfmt): sys.exit('Too small number! Minimal number is ' + str(-len(self._newfmt)-1))
+    if self._newfmt == []: raise ValueError('Impossible option')
+    if num > 0 and num > len(self._newfmt): raise ValueError('Too high number! Maximal number is ' + str(len(self._newfmt)))
+    elif num < 0 and num < -len(self._newfmt): raise ValueError('Too small number! Minimal number is ' + str(-len(self._newfmt)-1))
     self._initcompatible = True
     self._reorder()
-    if self._newfmt[num][1] == []: self.removecbars()
-    self.update(self._newfmt[num][0], add=False, delete=False, todefault = True)
+    if self._newfmt[num-1][1] == []: self.removecbars()
+    self.update(self._newfmt[num-1][0], add=False, delete=False, todefault = True)
     self._initcompatible = False
     self._reorder()
-    if self._newfmt[num][1] != []: self.update_cbar(*self._newfmt[num][1], add=False, delete=False, todefault = True)
+    if self._newfmt[num-1][1] != []: self.update_cbar(*self._newfmt[num-1][1], add=False, delete=False, todefault = True)
     # shift to old fmt
     self._fmt = self._fmt + self._newfmt[:num]
     if num > 0: self._newfmt.__delslice__(0,num)
@@ -1736,7 +1739,7 @@ class maps(object):
      - levels: integer or list of integers. Specify levels to close
     """
     if any(arg not in ['data','figure'] for arg in args):
-      sys.exit('Unknown argument ' + ', '.join(arg for arg in args if arg not in ['data','figure']) + ". Possibilities are 'data' and 'figure'.")
+      raise KeyError('Unknown argument ' + ', '.join(arg for arg in args if arg not in ['data','figure']) + ". Possibilities are 'data' and 'figure'.")
     if self.maps == {}: return
     if 'data' in args or args is ():
       for mapo in self.get_maps(**kwargs):
@@ -1914,7 +1917,7 @@ class maps(object):
     else: mapo = fieldplot
     # set up sorting informations
     sortlist = self._setupsortlist()
-    if len(self.subplots) != len(vlst)*len(times)*len(levels): sys.exit('Length of given axis (' + str(len(self.subplots)) + ') does not fit to number of variables, times and lengths (' + str(len(vlst)*len(times)*len(levels)) + ')!')
+    if len(self.subplots) != len(vlst)*len(times)*len(levels): raise ValueError('Length of given axis (' + str(len(self.subplots)) + ') does not fit to number of variables, times and lengths (' + str(len(vlst)*len(times)*len(levels)) + ')!')
     # setup axes
     isubplot = 0
     for val0 in sortlist[0]:
@@ -1925,7 +1928,7 @@ class maps(object):
           level = eval('val'+str(self.sort.index('l')))
           if fromscratch: self.maps = mapo(self.fname, var=str(var), time=time, level=level, ax=self.subplots[isubplot], fmt=fmt[var]['t'+str(time)]['l'+str(level)], nco = self.nco, timenames = self.timenames, levelnames = self.levelnames, lon=self.lonnames, lat=self.latnames, ax_shapes=self._subplot_shape, ax_num=self._subplot_nums[isubplot], mapsobj = self, u = u, v = v)
           else:
-            if not self._initcompatible: sys.exit('Initcompatible must be set to True!')
+            if not self._initcompatible: raise ValueError('Initcompatible must be set to True!')
             mapo = self.maps[var]['t'+str(time)]['l'+str(level)]
             mapo.ax = self.subplots[isubplot]
             if hasattr(mapo, 'cbar'): del mapo.cbar
@@ -1936,7 +1939,7 @@ class maps(object):
           isubplot+=1
     return  
   
-  def make_movie(self, output, fmt={}, cbarfmt = {}, steps = 'all', *args, **kwargs):
+  def make_movie(self, output, fmt={}, onecbar = {}, steps = 'all', *args, **kwargs):
     """Function to create a movie with the current settings.
     Input:
       - output: string or 1D-array of strings. If string: <<<var>>>,
@@ -1949,7 +1952,7 @@ class maps(object):
         as the number of steps of the movie (e.g. to modify the title of
         variable 't2m' with three time steps:
         fmt = {'t2m':{'title':['title1','title2','title3']}}).
-      - cbarfmt: Dictionary or list of dictionaries (Default: {}). Same
+      - onecbar: Dictionary or list of dictionaries (Default: {}). Same
         settings as for update_cbar function but (like fmt) with values
         of formatoption keywords being 1D-arrays with same length as number
         of steps
@@ -1992,7 +1995,7 @@ class maps(object):
       if steps == 'all':
         for timename in self.timenames:
           try:
-            steps = xrange(self.nco.variables[maps[0].name]._shape()[self.nco.variables[maps[0].name].dimensions.index(timename)])
+            steps = range(self.nco.variables[maps[0].name]._shape()[self.nco.variables[maps[0].name].dimensions.index(timename)])
             break
           except ValueError: pass
       
@@ -2024,7 +2027,7 @@ class maps(object):
         def __len__(self): return len(steps)
       
       # data generator
-      if cbars != []: data_gen = myizip(myizip(*(mapo._moviedata(steps, **fmt[mapo.name]['t'+str(mapo.time)]['l'+str(mapo.level)]) for mapo in maps)), myizip(*(cbar._moviedata(steps, **cbarfmt) for cbar in cbars)))
+      if cbars != []: data_gen = myizip(myizip(*(mapo._moviedata(steps, **fmt[mapo.name]['t'+str(mapo.time)]['l'+str(mapo.level)]) for mapo in maps)), myizip(*(cbar._moviedata(steps, **onecbar) for cbar in cbars)))
       else: data_gen = myizip(*(mapo._moviedata(steps, **fmt[mapo.name]['t'+str(mapo.time)]['l'+str(mapo.level)]) for mapo in maps))
       # run function
       if cbars != []: runmovie = lambda args: [mapo._runmovie(args[0][maps.index(mapo)]) for mapo in maps] + [cbar._runmovie(args[1][cbars.index(cbar)]) for cbar in cbars]
@@ -2053,8 +2056,9 @@ class maps(object):
     else: self.update_cbar(*self._fmt[-1][1], add=False, delete=False, todefault = True)
         
 
-  def _setupfmt(self, formatoptions):
-    # set up the formatoptions for each variable
+  def _setupfmt(self, oldfmt):
+    """set up the fmt for the mapBase instances"""
+    # set up the dictionary for each variable
     if self.maps == {}:
       vlst   = self.vlst
       times  = {var:['t' + str(time) for time in self.times] for var in vlst}
@@ -2068,25 +2072,25 @@ class maps(object):
     strlevels = []
     for var in vlst:
       for time in levels[var]: strlevels = strlevels + levels[var][time]
-    """set up the formatoptions for the map objects"""
-    if formatoptions is None: fmt = {var:{time:{level:{} for level in strlevels} for time in strtimes} for var in vlst}
-    elif isinstance(formatoptions,fmtBase): fmt = {var:{time:{level:formatoptions for level in levels[var][time]} for time in levels[var]} for var in levels}
-    elif isinstance(formatoptions,dict):
+    # set up the fmt for the mapBase instances
+    if oldfmt is None: fmt = {var:{time:{level:{} for level in strlevels} for time in strtimes} for var in vlst}
+    elif isinstance(oldfmt,fmtBase): fmt = {var:{time:{level:oldfmt for level in levels[var][time]} for time in levels[var]} for var in levels}
+    elif isinstance(oldfmt,dict):
       fmt = {}
       for var in vlst:
         fmt.update({var:{}})
         for time in times[var]:
           fmt[var].update({time:{}})
           for level in levels[var][time]:
-            fmt[var][time][level] = {key:value for key, value in formatoptions.items() if key not in vlst+strtimes+strlevels}
-            if time in formatoptions: fmt[var][time][level].update({key:value for key, value in formatoptions[time].items() if key not in vlst+strtimes+strlevels})
-            if level in formatoptions: fmt[var][time][level].update({key:value for key, value in formatoptions[level].items() if key not in vlst+strtimes+strlevels})
-            if var in formatoptions:
-              fmt[var][time][level].update({key:value for key, value in formatoptions[var].items() if key not in vlst+strtimes+strlevels})
-              if level in formatoptions[var]: fmt[var][time][level].update({key:value for key, value in formatoptions[var][level].items() if key not in vlst+strtimes+strlevels})
-              if time in formatoptions[var]:
-                fmt[var][time][level].update({key:value for key, value in formatoptions[var][time].items() if key not in vlst+strtimes+strlevels})
-                if level in formatoptions[var][time]: fmt[var][time][level].update({key:value for key, value in formatoptions[var][time][level].items() if key not in vlst+strtimes+strlevels})
+            fmt[var][time][level] = {key:value for key, value in oldfmt.items() if key not in vlst+strtimes+strlevels}
+            if time in oldfmt: fmt[var][time][level].update({key:value for key, value in oldfmt[time].items() if key not in vlst+strtimes+strlevels})
+            if level in oldfmt: fmt[var][time][level].update({key:value for key, value in oldfmt[level].items() if key not in vlst+strtimes+strlevels})
+            if var in oldfmt:
+              fmt[var][time][level].update({key:value for key, value in oldfmt[var].items() if key not in vlst+strtimes+strlevels})
+              if level in oldfmt[var]: fmt[var][time][level].update({key:value for key, value in oldfmt[var][level].items() if key not in vlst+strtimes+strlevels})
+              if time in oldfmt[var]:
+                fmt[var][time][level].update({key:value for key, value in oldfmt[var][time].items() if key not in vlst+strtimes+strlevels})
+                if level in oldfmt[var][time]: fmt[var][time][level].update({key:value for key, value in oldfmt[var][time][level].items() if key not in vlst+strtimes+strlevels})
     return fmt
   
   def script(self, output, reduced = True):
@@ -2162,20 +2166,20 @@ class maps(object):
     if returnfmt: return (fmt)
     if returncbars: return (cbars)
   
-  def _reducefmt(self, formatoptions):
+  def _reducefmt(self, fmt):
     """reduce the given formatoptions"""
     dims = ['time','var','level','u','v']
     # set up vlst
-    mainvlst = sorted(formatoptions.keys())
+    mainvlst = sorted(fmt.keys())
     # set up times and list including all times (without duplicates)
-    times = {var:sorted(formatoptions[var].keys()) for var in mainvlst}
+    times = {var:sorted(fmt[var].keys()) for var in mainvlst}
     maintimelist = []
     for var in mainvlst:
       for time in times[var]:
         if time not in maintimelist: maintimelist.append(time)
     maintimelist.sort()
     # set up levels and list including all levels (without duplicates)
-    levels = {var:{t:sorted(formatoptions[var][t].keys()) for t in times[var]} for var in mainvlst}
+    levels = {var:{t:sorted(fmt[var][t].keys()) for t in times[var]} for var in mainvlst}
     mainlevellist = []
     for var in mainvlst:
       for t in levels[var]:
@@ -2187,9 +2191,9 @@ class maps(object):
     for var in mainvlst:
       for time in times[var]:
         for level in levels[var][time]:
-          for option in formatoptions[var][time][level]:
+          for option in fmt[var][time][level]:
             if option not in options: options[option] = {'list':[]}
-            options[option]['list'].append((var,time,level,formatoptions[var][time][level][option]))
+            options[option]['list'].append((var,time,level,fmt[var][time][level][option]))
     optionlist = options.keys()
     mask = np.zeros((len(mainvlst),len(maintimelist),len(mainlevellist)), dtype=int)
     for var in mainvlst:
@@ -2304,6 +2308,7 @@ class mapBase(object):
   latnames       = props.default('latnames', """List of latitude names to look for in the netCDF file""")
   nco            = props.nco('nco', """netCDF4.MFDataset instance of ncfile""")
   ax            = props.default('ax',"""axes instance the mapBase instance plots on.""")
+  weights        = props.weights('weights', """numpy array. Grid cell weights as calculated via cdos""")
   
   # Data properties
   lonorig        = props.dim('lonorig', """numpy array. Original (i.e. non-shifted) longitude data""")
@@ -2421,7 +2426,7 @@ class mapBase(object):
     specified by time and level specified by level. Dimension names for time and
     level will be taken from the mapBase object.
     """
-    if name not in self.nco.variables.keys(): sys.exit('Unknown variable name ' + name + '! Possible keys in the ncfile are ' + ','.join(key for key in self.nco.variables.keys()))
+    if name not in self.nco.variables.keys(): raise KeyError('Unknown variable name ' + name + '! Possible keys in the ncfile are ' + ','.join(key for key in self.nco.variables.keys()))
     # set up dimension order to read from the netCDF
     ncodims = self.nco.variables[name].dimensions
     ncodims = [dim for dim in ncodims] # convert tuple to list
@@ -2429,7 +2434,7 @@ class mapBase(object):
       if ncodims[i] in self.timenames:    ncodims[i] = time
       elif ncodims[i] in self.levelnames: ncodims[i] = level
       elif ncodims[i] in self.lonnames or ncodims[i] in self.latnames:   ncodims[i] = slice(None)
-      else: sys.exit("Unknown dimension '" + ncodims[i] + "' in netCDF file!")
+      else: raise KeyError("Unknown dimension '" + ncodims[i] + "' in netCDF file!")
     # read data
     data = self.nco.variables[name].__getitem__(ncodims)
     if type(data) is not np.ma.MaskedArray: data = np.ma.masked_array(data, mask=np.ma.make_mask(np.zeros(shape=np.shape(data)),shrink=False), copy=True)
@@ -2525,7 +2530,7 @@ class mapBase(object):
       else:
         orientations = ['horizontal', 'vertical', 'horizontal', 'vertical']
         cbarlabels   = ['b','r','sh','sv']
-        if cbarpos not in cbarlabels: sys.exit('Unknown position option ' + str(cbarpos) + '! Please use one of ' + ', '.join(label for label in cbarlabels) + '.')
+        if cbarpos not in cbarlabels: raise KeyError('Unknown position option ' + str(cbarpos) + '! Please use one of ' + ', '.join(label for label in cbarlabels) + '.')
         orientation = orientations[cbarlabels.index(cbarpos)]
         if cbarpos in ['b','r']:
           self.cbar[cbarpos] = plt.colorbar(self.plot, orientation = orientation, extend = self.fmt.extend, use_gridspec = True)
@@ -2613,7 +2618,7 @@ class fieldplot(mapBase):
       self.fmt = fieldfmt(**{key:val for key, val in fmt.items() if key not in dims})
     elif isinstance(fmt, fmtBase): self.fmt = fmt
     elif fmt is None:              self.fmt = fieldfmt()
-    else: sys.exit('Wrong type ' + str(type(fmt)) + ' for formatoptions')
+    else: raise ValueError('Wrong type ' + str(type(fmt)) + ' for formatoptions')
     
     # initialize data
     self.name      = var
@@ -2650,7 +2655,7 @@ class fieldplot(mapBase):
     # check the keywords
     dims = {'time':self.time,'var':self.name,'level':self.level,'fname':self.fname, 'data':None}
     dimsorig = {'time':self.timeorig,'var':self.nameorig,'level':self.levelorig}
-    if np.any([key not in self.fmt._default.keys() + dims.keys() for key in kwargs]): sys.exit('Unknown keywords ' + ', '.join(key for key in kwargs if key not in self.fmt._default.keys() + dims.keys()))
+    if np.any([key not in self.fmt._default.keys() + dims.keys() for key in kwargs]): raise KeyError('Unknown keywords ' + ', '.join(key for key in kwargs if key not in self.fmt._default.keys() + dims.keys()))
     
     # delete formatoptions which are already at the wished state
     if not todefault: kwargs = {key:value for key, value in kwargs.items() if np.all(value != self.fmt.asdict().get(key, self.fmt._default.get(key, dims.get(key,None))))}
@@ -2686,15 +2691,15 @@ class fieldplot(mapBase):
     # update rest
     self.fmt.update(**{key:value for key, value in kwargs.items() if key not in self.fmt._bmprops + dims.keys()})
     if 'meridionals' in kwargs or 'merilabelpos' in kwargs:
-      keys = self.basemapops['meridionals'].keys()
-      for key in keys: del self.basemapops['meridionals'][key]
+      keys = self._basemapops['meridionals'].keys()
+      for key in keys: del self._basemapops['meridionals'][key]
       self.fmt.meridionals = self.fmt.meridionals
-      if plot: self.basemapops['meridionals'] = self.mapproj.drawmeridians(self.fmt._meriops['meridionals'], **{key:value for key, value in self.fmt._meriops.items() if key != 'meridionals'})
+      if plot: self._basemapops['meridionals'] = self.mapproj.drawmeridians(self.fmt._meriops['meridionals'], **{key:value for key, value in self.fmt._meriops.items() if key != 'meridionals'})
     if 'parallels' in kwargs or 'paralabelpos' in kwargs:
-      keys = self.basemapops['parallels'].keys()
-      for key in keys: del self.basemapops['parallels'][key]
+      keys = self._basemapops['parallels'].keys()
+      for key in keys: del self._basemapops['parallels'][key]
       self.fmt.parallels = self.fmt.parallels
-      if plot: self.basemapops['parallels'] = self.mapproj.drawparallels(self.fmt._paraops['parallels'], **{key:value for key, value in self.fmt._paraops.items() if key != 'parallels'})
+      if plot: self._basemapops['parallels'] = self.mapproj.drawparallels(self.fmt._paraops['parallels'], **{key:value for key, value in self.fmt._paraops.items() if key != 'parallels'})
     if 'lsm' in kwargs:
       if 'lsm' in self._basemapops: self._basemapops['lsm'].remove(); del self._basemapops['lsm']
       if kwargs['lsm']: self._basemapops=self.mapproj.drawcoastlines()
@@ -2817,7 +2822,6 @@ class windplot(mapBase):
   u              = props.data('u', """numpy.ma.array. Data of the zonal windfield""")
   v              = props.data('v', """numpy.ma.array. Data of the meridional wind field""")
   speed          = props.speed('speed', """numpy.ma.array. Speed as calculated from u and v""")
-  weights        = props.weights('weights', """numpy array. Grid cell weights as calculated via cdos""")
   
   
   def __init__(self, ncfile, u, v, var = 'wind', fmt = {}, **kwargs):
@@ -2845,7 +2849,7 @@ class windplot(mapBase):
       self.fmt = windfmt(**{key:val for key, val in fmt.items() if key not in dims})
     elif isinstance(fmt, fmtBase): self.fmt = fmt
     elif fmt is None:              self.fmt = windfmt()
-    else: sys.exit('Wrong type ' + str(type(fmt)) + ' for formatoptions')
+    else: raise ValueError('Wrong type ' + str(type(fmt)) + ' for formatoptions')
     
     self.name      = var
     self.uname     = u
@@ -2947,7 +2951,7 @@ class windplot(mapBase):
     
     # check the keywords
     dims = {'time':self.time,'var':self.name,'level':self.level,'fname':self.fname,'u':None,'v':None, 'udata':None, 'vdata':None}
-    if np.any([key not in self.fmt._default.keys() + dims.keys() for key in kwargs]): sys.exit('Unknown keywords ' + ', '.join(key for key in kwargs if key not in self.fmt._default.keys() + dims.keys()))
+    if np.any([key not in self.fmt._default.keys() + dims.keys() for key in kwargs]): raise KeyError('Unknown keywords ' + ', '.join(key for key in kwargs if key not in self.fmt._default.keys() + dims.keys()))
     
     
     # delete formatoptions which are already at the wished state
@@ -2982,14 +2986,14 @@ class windplot(mapBase):
     # update rest
     self.fmt.update(**{key:value for key, value in kwargs.items() if key not in self.fmt._bmprops + dims.keys()})
     if 'meridionals' in kwargs or 'merilabelpos' in kwargs:
-      keys = self.basemapops['meridionals'].keys()
-      for key in keys: del self.basemapops['meridionals'][key]
-      if plot: self.basemapops['meridionals'] = self.mapproj.drawmeridians(self.fmt._meriops['meridionals'], **{key:value for key, value in self.fmt._meriops.items() if key != 'meridionals'})
+      keys = self._basemapops['meridionals'].keys()
+      for key in keys: del self._basemapops['meridionals'][key]
+      if plot: self._basemapops['meridionals'] = self.mapproj.drawmeridians(self.fmt._meriops['meridionals'], **{key:value for key, value in self.fmt._meriops.items() if key != 'meridionals'})
     if 'parallels' in kwargs or 'paralabelpos' in kwargs:
-      keys = self.basemapops['parallels'].keys()
-      for key in keys: del self.basemapops['parallels'][key]
+      keys = self._basemapops['parallels'].keys()
+      for key in keys: del self._basemapops['parallels'][key]
       self.fmt.parallels = self.fmt.parallels
-      if plot: self.basemapops['parallels'] = self.mapproj.drawparallels(self.fmt._paraops['parallels'], **{key:value for key, value in self.fmt._paraops.items() if key != 'parallels'})
+      if plot: self._basemapops['parallels'] = self.mapproj.drawparallels(self.fmt._paraops['parallels'], **{key:value for key, value in self.fmt._paraops.items() if key != 'parallels'})
     
     
     if plot: self._configuretitles()

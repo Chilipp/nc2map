@@ -95,7 +95,7 @@ def show_colormaps(*args):
       plt.imshow(a, aspect='auto', cmap=get_cmap(m), origin='lower')
       pos = list(ax.get_position().bounds)
       fig.text(pos[0] - 0.01, pos[1], m, fontsize=10, horizontalalignment='right')
-  plt.show()
+  plt.show(block=False)
 
 def returnbounds(data, bounds):
   """Returns automatically generated bounds.
@@ -1009,12 +1009,12 @@ class mapproperties():
     """Dimension property for longitude and latitude. Sets up the dimension by using self.nco and the given dimension name"""
     def getx(self): return getattr(self,'_'+x)
     def setx(self, names):
-      try:
+      if isinstance(names[0],str):
         for name in names:
           try: setattr(self, '_'+x,self.nco.variables[name][:]); exist = True; break
           except KeyError: exist = False
         if not exist: raise KeyError('Unknown dimension name ' + str(names) + '! Possible keys in the ncfile are ' + ','.join(key for key in self.nco.variables.keys()))
-      except TypeError: setattr(self, '_'+x, names)
+      else: setattr(self, '_'+x, names)
     def delx(self): delattr(self,'_'+x)
     return property(getx,setx,delx,doc)
   def data(self,x,doc):
@@ -1448,11 +1448,11 @@ class maps(object):
     if times == 'all':  times = {var:sorted(self.maps[var].keys()) for var in vlst}
     else:               
       if isinstance(times, int):  times = [times]
-      times = {var:['t' + str(time) for time in times] for var in vlst}
+      times = {var:['t' + str(time) for time in times if 't'+str(time) in self.maps[var]] for var in vlst}
     if levels == 'all': levels = {var:{t:sorted(self.maps[var][t].keys()) for t in times[var]} for var in vlst}
     else:               
       if isinstance(levels, int): levels = [levels]
-      levels = {var:{t:['l' + str(level) for level in levels] for t in times[var]} for var in vlst}
+      levels = {var:{t:['l' + str(level) for level in levels if 'l'+str(level) in self.maps[var][t]] for t in times[var]} for var in vlst}
     maps = []
     for var in vlst:
       for t in times[var]:
@@ -1788,10 +1788,11 @@ class maps(object):
     delete    = kwargs.get('delete', True)
     todefault = kwargs.get('todefault', False)
     kwargs = {key:value for key,value in kwargs.items() if key not in ['add','delete','todefault']}
-    if kwargs != {}: args = list(args) + [kwargs]
+    if kwargs != {}: newops = list(args) + [kwargs]
+    else: newops = list(args)
     
     # first set colorbars
-    for cbarops in args:
+    for cbarops in newops:
       if 'windplot' in cbarops: args = tuple(['wind']); cbarops.update(cbarops.pop('windplot')); wind=True; get_func = self.get_winds
       else: args = (); wind = False; get_func=self.get_maps
       dims = {key:cbarops.get(key, 'all') for key in ['vlst','levels','times']}
@@ -2801,6 +2802,7 @@ class fieldplot(mapBase):
     if self.time != self.timeorig:       fmt.update({'time':self.time})
     if self.level != self.levelorig:     fmt.update({'level':self.level})
     if self.name != self.nameorig:       fmt.update({'var':self.name})
+    if self.wind is not None: fmt.update({'windplot':self.wind.asdict()})
     return fmt
   
   # ------------------ modify docstrings here --------------------------
@@ -2951,6 +2953,7 @@ class windplot(mapBase):
     
     # check the keywords
     dims = {'time':self.time,'var':self.name,'level':self.level,'fname':self.fname,'u':None,'v':None, 'udata':None, 'vdata':None}
+    dimsorig = {'time':self.timeorig,'var':self.nameorig,'level':self.levelorig, 'u':self.unameorig, 'v':self.vnameorig}
     if np.any([key not in self.fmt._default.keys() + dims.keys() for key in kwargs]): raise KeyError('Unknown keywords ' + ', '.join(key for key in kwargs if key not in self.fmt._default.keys() + dims.keys()))
     
     
@@ -2958,9 +2961,9 @@ class windplot(mapBase):
     if not todefault: kwargs = {key:value for key, value in kwargs.items() if value != self.fmt.asdict().get(key, self.fmt._default.get(key, dims.get(key,None)))}
     else:
       oldkwargs = kwargs.copy()
-      kwargs = {key:kwargs.get(key, value) for key, value in self.fmt._default.items() if key != 'windplot' and getattr(self.fmt, key) != self.fmt._default[key]}
-      if 'windplot' in oldkwargs: kwargs['windplot'] = oldkwargs['windplot']
-      else: kwargs['windplot'] = {}
+      kwargs = {key:kwargs.get(key, value) for key, value in self.fmt._default.items() if (key not in kwargs and np.all(value != getattr(self.fmt,key))) or (key in kwargs and np.all(kwargs[key] != getattr(self.fmt,key)))}
+      if not self.fmt._enablebounds: kwargs = {key:value for key, value in kwargs.items() if key not in ['cmap','bounds']}
+      kwargs.update({key:oldkwargs.get(key, value) for key, value in dimsorig.items() if dims[key] != dimsorig[key] or (key in oldkwargs and oldkwargs[key] != dims[key])})
     # update plotting of cbar properties
     if 'plotcbar' in kwargs:
       if kwargs['plotcbar'] in [False, None]: kwargs['plotcbar'] = ''
@@ -3022,7 +3025,8 @@ class windplot(mapBase):
         keep = lambda x: not isinstance(x, mpl.patches.FancyArrowPatch)
         self.ax.patches = [patch for patch in self.ax.patches if keep(patch)]
       else:
-        self.plot.remove()
+        try: self.plot.remove()
+        except: pass
       del self.plot
   
   def _reduceuv(self, perc=50, pctl=0):

@@ -64,12 +64,14 @@ def get_cmap(cmap, N=11):
     defcmap = cmap
   return defcmap
 
-def show_colormaps(*args):
+def show_colormaps(*args,**kwargs):
   """Script to show standard colormaps from pyplot. Taken from
   http://matplotlib.org/1.2.1/examples/pylab_examples/show_colormaps.html
   and slightly adapted in November 2014.
   *args may be any names as strings of standard colorbars (e.g. 'jet',
-  'Greens', etc.)."""
+  'Greens', etc.) or a colormap instance suitable with pyplot.
+  Keyword arguments may be
+  N: integer (Default: 11). The number of increments in the colormap."""
   # This example comes from the Cookbook on www.scipy.org.  According to the
   # history, Andrew Straw did the conversion from an old page, but it is
   # unclear who the original author is."""
@@ -81,18 +83,19 @@ def show_colormaps(*args):
   # '_r' because these are simply reversed versions of ones that don't end
   # with '_r'
   for arg in (arg for arg in args if arg not in plt.cm.datad.keys() + cmapnames.keys()): 
-    similarkeys = get_close_matches(arg, plt.cm.datad.keys()+cmapnames.keys())
-    if similarkeys != []: print("Colormap " + arg + " not found in standard colormaps. Similar colormaps are " + ', '.join(key for key in similarkeys))
-    else: print("Colormap " + arg + " not found in standard colormaps. Run function without arguments to see all colormaps")
+    if isinstance(arg,str):
+      similarkeys = get_close_matches(arg, plt.cm.datad.keys()+cmapnames.keys())
+      if similarkeys != []: print("Colormap " + arg + " not found in standard colormaps. Similar colormaps are " + ', '.join(key for key in similarkeys))
+      else: print("Colormap " + arg + " not found in standard colormaps. Run function without arguments to see all colormaps")
   if args == (): maps = sorted(m for m in plt.cm.datad.keys()+cmapnames.keys() if not m.endswith("_r"))
-  else: maps = sorted(m for m in plt.cm.datad.keys()+cmapnames.keys() if m in args)
+  else: maps = sorted(m for m in plt.cm.datad.keys()+cmapnames.keys() if m in args) + [m for m in args if not isinstance(m,str)]
   nmaps = len(maps) + 1
   fig = plt.figure(figsize=(5,10))
   fig.subplots_adjust(top=0.99, bottom=0.01, left=0.2, right=0.99)
   for i,m in enumerate(maps):
       ax = plt.subplot(nmaps, 1, i+1)
       plt.axis("off")
-      plt.imshow(a, aspect='auto', cmap=get_cmap(m), origin='lower')
+      plt.imshow(a, aspect='auto', cmap=get_cmap(m,N=kwargs.get('N',11)), origin='lower')
       pos = list(ax.get_position().bounds)
       fig.text(pos[0] - 0.01, pos[1], m, fontsize=10, horizontalalignment='right')
   plt.show(block=False)
@@ -2377,7 +2380,6 @@ class mapBase(object):
     self.timenames = timenames
     self.levelnames= levelnames
     self._dims      = {'lon':lon, 'lat':lat, 'time':timenames, 'level':levelnames}
-    if hasattr(self, '_furtherinit'): self._furtherinit(fmt=fmt,**kwargs)
     
   def _reinit(self, time=None, level=None, ncfile=None, ax=None, **kwargs):
     if time is not None:     self.time      = time
@@ -2463,7 +2465,8 @@ class mapBase(object):
     """shifts the data using mpl_toolkits.basemap.shiftgrid function to position the
     center of the map at 0 longitude"""
     if len(np.shape(self.lon)) == 1:
-      if self.lon[0]  == 0:
+      dx = np.abs(self.lon[1]-self.lon[0])
+      if self.lon[0]  == 0 or np.abs(self.lon[0])-dx/2. == 0:
         data, shiftedlon = bm.shiftgrid(180.,data,self.lonorig,start=False)
         if np.all(shiftedlon != self.lon): self.lon = shiftedlon
     self._meshgrid()
@@ -2534,7 +2537,9 @@ class mapBase(object):
         if cbarpos not in cbarlabels: raise KeyError('Unknown position option ' + str(cbarpos) + '! Please use one of ' + ', '.join(label for label in cbarlabels) + '.')
         orientation = orientations[cbarlabels.index(cbarpos)]
         if cbarpos in ['b','r']:
-          self.cbar[cbarpos] = plt.colorbar(self.plot, orientation = orientation, extend = self.fmt.extend, use_gridspec = True)
+          if isinstance(self.plot, mpl.streamplot.StreamplotSet):
+            self.cbar[cbarpos] = plt.colorbar(self.plot.lines, orientation = orientation, extend = self.fmt.extend, use_gridspec = True)
+          else: self.cbar[cbarpos] = plt.colorbar(self.plot, orientation = orientation, extend = self.fmt.extend, use_gridspec = True)
         elif cbarpos in ['sh', 'sv']:
           if cbarpos == 'sh':
             fig = plt.figure(figsize=(8,1))

@@ -27,7 +27,6 @@ from collections import OrderedDict
 import datetime as dt
 import numpy as np
 import netCDF4 as nc
-import gdal
 from .warning import warn, critical, Nc2MapRuntimeWarning
 import mpl_toolkits.basemap as bm
 from matplotlib.tri import Triangulation, TriAnalyzer

@@ -1,0 +1,22 @@
+% !TeX root = ../user_manual.tex
+\chapter{Interactive usage} \label{ch:interactive}
+One, or maybe the most important feature of the \gls{nc2map} module is it's capability for an interactive usage. You do not have to run the same script again and again but can use \lstinline|python| or \lstinline|ipython| (or any other python shell) to modify your plots at run time. I recommend to use the interactive python shell \lstinline|ipython|, because it also has the \lstinline| %save| magic to save your commands as a script.
+
+However, the updating process is rather simple via the \glssymbol{Maps.update} method. You can also find a demo script in the \lstinline|nc2map/demo| directory, but you learn it the best, if you simply try it by yourself. The \gls{Maps.update} method takes every
+formatoption keyword (see next \autoref{ch:fmt}) as keyword and any meta attribute in your \gls{MapBase} instance as a selector.
+For example
+\begin{lstlisting}[label={lst:update_var}, caption={Update formatoptions variable specific}]
+	mymaps.update(var='t2m', cmap='RdBu_r')
+\end{lstlisting}
+will update the colormap of all \gls{MapBase} instances showing the NetCDF variable \lstinline|t2m|. The same works for own created meta data, e.g. coming back to listing \ref{lst:own_meta},
+\begin{lstlisting}
+	mymaps.update(model='my first model', lonlatbox='Europe')
+\end{lstlisting}
+will update the plot of all \gls{MapBase} instances that were created with the \lstinline|'my first model'| flag to focus on Europe, whereas all the others keep untouched. The same works for meta informations stored in the variable of the NetCDF file, e.g.
+\begin{lstlisting}
+	mymaps.update(long_name='Temperature', cmap='RdBu_r')
+\end{lstlisting}
+will have the same effect as listing \ref{lst:update_var}. You can also pass in a list of meta attributes instead of strings, e.g
+\begin{lstlisting}
+	mymaps.update(model=['my first model', 'my second model'], cmap='RdBu')
+\end{lstlisting}

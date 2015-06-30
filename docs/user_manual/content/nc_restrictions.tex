@@ -1,0 +1,12 @@
+% !TeX root = ../user_manual.tex
+\chapter{NetCDF restrictions and dimension handling}
+The \gls{nc2map} module is designed to very flexible. Therefore in principle every NetCDF file can be read. You can have as many dimensions in your NetCDF file as you want and you can name them as you want. However, only one can always be regarded as one of the special dimensions latitude, longitude, time and level. In detail:
+\begin{enumerate}
+	\item Your NetCDF file should only have one longitude variable and one latitude variable and the data of this dimensions have to be stored in two different variables
+	\item Only one variable can be considered as the variable for the time dimension
+	\item Only one variable can be considered as the variable for the level dimension
+\end{enumerate}
+You can tell the \gls{reader} at the initalization, what the \lstinline|levelnames| are it shall look for, the \lstinline|timenames|, the \lstinline|lonnames| and the \lstinline|latnames|. Those keywords can also be set at the initialization of a \gls{Maps} instance. (see \lstinline|help(nc2map.Maps)| and \lstinline|help(nc2map.readers.ReaderBase)|).
+
+\section{Using the time information in the NetCDF file} \label{sec:time}
+Concerning the time dimension, it is recommended to use relative or absolute time units. If the time information in the \gls{reader} (i.e. NetCDF file) is stored in relative (e.g. hours since ...) or absolute (day as \%Y\%m\%d.f) units, strings like \lstinline|%Y| for year or \lstinline|%m| for the month as given by the python datetime package in labels like \hyperref[item:title]{title}, \hyperref[item:text]{text}, etc., are also replaced by the specific time information. Furthermore you can then select the time step not only via the time step explicitly (i.e. the integer), but by the time information. You can then either use a string in isoformat, e.g. \lstinline|'1979-02'| for February 1979 or \lstinline|'1979-02-01T18:45'| for February 1st, 1979 at 18:45 in the evening, a \lstinline|numpy.datetime64| instance or a \lstinline|datetime.datetime| instance.

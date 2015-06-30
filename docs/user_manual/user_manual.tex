@@ -1,0 +1,80 @@
+\documentclass[a4paper,12pt,twoside,final,toc=listof, bibliography=totoc, open=any]{scrbook}
+\usepackage[usenames,dvipsnames]{xcolor} % Required for specifying custom colors and referring to colors by name
+\usepackage{graphicx}
+\usepackage[english]{babel}
+\usepackage[latin1]{inputenc}
+\usepackage{amsmath, amsthm,amssymb}
+\usepackage{epstopdf}
+\usepackage[authoryear, round]{natbib}
+\usepackage[babel,english=american]{csquotes}
+\usepackage[headsepline, automark]{scrpage2}
+\usepackage[format=plain,indention=.5cm,margin=10pt,font=small,font=sf, labelfont=bf]{caption}
+\usepackage{listings}
+\usepackage{subcaption}
+\usepackage{colortbl}
+\usepackage{enumitem}
+\usepackage{lipsum}
+\usepackage[colorlinks, linkcolor=Aquamarine, citecolor=Aquamarine, urlcolor=black]{hyperref}
+\usepackage[toc, index]{glossaries}
+\usepackage{etoolbox}
+\AtBeginEnvironment{description}{\pretocmd{\item}{\phantomsection}{}{\errmessage{couldn't patch item}}}
+
+% modify tree style to make target bold
+
+\makeglossaries
+
+% make hyperlinks of glossary entries black
+\renewcommand*{\glstextformat}[1]{\textcolor{black}{#1}}
+% label glossaries with glo:<glossary-name>
+\renewcommand*{\glsautoprefix}{glo:} 
+\renewcommand{\glsseeitemformat}[1]{\glssymbol{#1}}
+
+
+\input{listingsops}
+\input{content/fmt_gloss}
+\input{glossary-entries}
+
+\pagestyle{scrheadings}
+
+\newcommand{\version}{0.0b}
+\newcommand{\mytitle}{nc2map User Manual}
+\newcommand{\mysubtitle}{Module for an interactive plotting of NetCDF files with Python, version \version}
+\newcommand{\myauthor}{Philipp Sommer}
+\newcommand{\mydate}{April 2015}
+\title{\mytitle}
+\subtitle{\mysubtitle}
+\author{\myauthor}
+
+\hypersetup{
+pdftitle=\mytitle,
+pdfauthor=\myauthor,
+pdfcreator=\myauthor,
+pdfproducer=\myauthor,
+pdfsubject=\mysubtitle,
+pdfkeywords={netcdf, python, plot, map, matplotlib, basemap}
+}
+
+\begin{document}
+	\frontmatter
+	\maketitle
+	{
+	\hypersetup{linkcolor=black}
+	\tableofcontents
+	}
+	\clearpage
+	\include{content/preface}
+	
+   	\mainmatter
+	\include{content/introduction}
+	\include{content/getting-started}
+	\include{content/nc_restrictions}
+	\include{content/interactive}
+	\include{content/formatoptions}
+	\include{content/accessing-data}
+	\include{content/evaluation}
+	
+	\backmatter
+%	\printglossary[type=index]
+	\printglossary[type=main, style=indexhypergroup]
+
+\end{document}

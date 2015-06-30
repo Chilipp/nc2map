@@ -1,0 +1,9 @@
+% !TeX root = ../user_manual.tex
+\chapter{\Glspl*{fmt}} \label{ch:fmt}
+The basic control feature for the appearance of the plot are the \gls{fmt} keywords, usually identified by the \glssymbol{fmt} key, for example in the initialization of a \gls{Maps} instance or in the \glssymbol{Maps.update} method\footnote{However, you can either give the formatoptions directly as keyword argument to the \gls{Maps.update} method or as dictionary via the \glssymbol{fmt} key.}. The possible formatoptions depend on what you are plotting. A \gls{FieldPlot} (upper row in figure \ref{fig:demo}) for example has the possible formatoptions shown in table \ref{tab:fmt_keys}. A \gls{WindPlot} (lower row in figure \ref{fig:demo}) additionally has the keywords shown in table \ref{tab:windfmt_keys} and simple plots (\gls{LinePlot} instances) have the formatoptions shown in table \ref{tab:simplefmt_keys}. 
+
+The following sections are automatically generated from the \gls{nc2map} module. They show the documentation of the \gls{fmt} keys, however there are some helper functions to display possible keys and their usage inside python: \glssymbol{show_fmtkeys} and \glssymbol{show_fmtdocs} (see \autoref{sec:helper}).\footnote{Hint: \gls{show_fmtkeys} can also be used to look how to exactly spell the formatoption keyword you want to use.}
+
+\input{content/fmt_keys}
+
+\input{content/fmt_docs}

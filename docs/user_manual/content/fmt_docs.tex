@@ -1,0 +1,203 @@
+\section{Basemap and axes formatoptions}
+\begin{description}
+    \item[\gls*{figtitlesize}:] \label{item:figtitlesize}  string or float (Default: 12). Defines the size of the subtitle of the figure (see fontsize for possible values). This is the title of this specific axes! For the title of the figure see figtitlesize
+    \item[\gls*{text}:] \label{item:text}  String, tuple or list of tuples (x,y,s[,coord.-system][,options]]) (Default: []).
+\begin{itemize}
+    \item If string s: this will be used as (1., 1., s, {\enquote{ha}: \enquote{right}}) (i.e. a string in the upper right corner of the axes).
+    \item If tuple or list of tuples, each tuple defines a text instance on the plot. 0$\leq$x, y$\leq$1 are the coordinates. The coord.-system can be either the data coordinates (default, \enquote{data}) or the axes coordinates (\enquote{axes}) or the figure coordinates (\enquote{fig}). The string s finally is the text. options may be a dictionary to specify format the appearence (e.g. \enquote{color}, \enquote{fontweight}, \enquote{fontsize}, etc., see matplotlib.text.Text for possible keys). To remove one single text from the plot, set (x,y,'') for the text at position (x,y); to remove all set text=[]. Metadata keys (var, time, level, or netCDF attributes like long\_name, units, ...) maybe replaced via \%(key)s. If the time information in the reader (i.e. NetCDF file) is stored in relative (e.g. hours since ...) or absolute (day as \%Y\%m\%d.f) units, directives like \%Y for year or \%m for the month as given by the python datetime package, are also replaced by the specific time information. There are furthermore some special keys which are replaced when you insert '{key}' in your text (e.g. {tinfo}). Those are tinfo: \%B \%d, \%Y. \%H:\%M dinfo: \%B \%d, \%Y Those special keys are defined in the nc2map.defaults.texts[\enquote{labels}] dictionary.
+\end{itemize}
+
+    \item[\gls*{lsm}:] \label{item:lsm}  Boolean (Default: True). If True, the continents will be plottet.
+    \item[\gls*{merilabelpos}:] \label{item:merilabelpos}  List of 4 values (Default: None) that control whether meridians are labelled where they intersect the left, right, top or bottom of the plot. For example labels=[1, 0, 0, 1] will cause meridians to be labelled where they intersect the left and bottom of the plot, but not the right and top.
+    \item[\gls*{ticksize}:] \label{item:ticksize}  string or float (Default: small). Defines the size of the ticks (see fontsize for possible values)
+    \item[\gls*{labelsize}:] \label{item:labelsize}  string or float (Default: medium). Defines the size of x- and y-axis labels (see fontsize for possible values)
+    \item[\gls*{latlon}:] \label{item:latlon}  True/False (Default: True). Sets latlon keyword for basemap plot function (or not).
+    \item[\gls*{figtitleweight}:] \label{item:figtitleweight}  Fontweight of the figure suptitle (Default: Defined by fontweight property). See fontweight above for possible values.
+    \item[\gls*{titleweight}:] \label{item:titleweight}  Fontweight of the title (Default: Defined by fontweight property). See fontweight above for possible values. This is the title of this specific axes! For the title of the figure see figtitleweight
+    \item[\gls*{lonlatbox}:] \label{item:lonlatbox}  1D-array [lon1,lon2,lat1,lat2], string (or pattern), or dictionary (Default: global, i.e. [-180.0, 180.0, -90.0, 90.0] for proj==\enquote{cyl} and Northern Hemisphere for \enquote{northpole} and Southern for \enquote{southpole}). Selects the region for the plot.
+\begin{itemize}
+    \item If string this will be compiled as a pattern to match any of the keys in nc2map.defaults.lonlatboxes (it contains longitude-latitude definitions for countries and continents). E.g. to focus on Germany, set lonlatbox=\enquote{Germany}. To focus on Africa, set lonlatbox=\enquote{Africa}. To focus on Germany, France and Italy, set lonlatbox='Germany|France|Italy'.
+    \item If dictionary possible keys are
+\begin{itemize}
+        \item \enquote{ifile} to give an input shapefile (if not set, use the shapes from the default shape file located at /home/chilipp/Dokumente/myplots-scripts/nc2map/data/countries\_and\_continents\_vmap0 This Shapefile is based upon the bnd-political-boundary-a.shp shapes from the Vmap0 Dataset from GIS-Lab (http://gis-lab.info/qa/vmap0-eng.html), accessed May 2015.
+        \item any field name in the input shape file (see nc2map.get\_fnames and nc2map.get\_unique\_vals function) to select specific shapes
+\end{itemize}
+\end{itemize}
+
+
+    \item[\gls*{labelweight}:] \label{item:labelweight}  Fontweight of axis labels (Default: Defined by fontweight property). See fontweight above for possible values.
+    \item[\gls*{mask}:] \label{item:mask}  array (x[, var][, num]) (Default: None). The first entry must be a string for a netCDF file or a nc2map.readers.ArrayReader instance, the second entry might be the name of the variable in the mask file to read in, the number at the end defines the values where to mask (if not given, mask everywhere where the mask is 0)
+    \item[\gls*{tight}:] \label{item:tight} Boolean (Default: False). Make tight\_layout after plotting if True.
+    \item[\gls*{proj}:] \label{item:proj}  string (\enquote{cyl}, \enquote{robin}, \enquote{northpole}, \enquote{southpole}) or dictionary (Default: cyl). Defines the options for the projection used for the plot. If string, Basemap is set up automatically with settings from lonlatbox, if dictionary, these are the keyword arguments passed to mpl\_toolkits.basemap.Basemap initialization.
+    \item[\gls*{titlesize}:] \label{item:titlesize}  string or float (Default: large). Defines the size of the title (see fontsize for possible values)
+    \item[\gls*{parallels}:] \label{item:parallels}  1D-array or integer (Default: 5). Defines the lines where to draw parallels. Possible types are
+\begin{itemize}
+    \item 1D-array: manually specify the location of the parallels
+    \item integer: Gives the number of parallels between maximal and minimal lattitude (including max- and minimum line)
+\end{itemize}
+
+    \item[\gls*{fontweight}:] \label{item:fontweight}  A numeric value in the range 0-1000 or string (Default: None). Defines the fontweight of the ticks. Possible strings are one of \enquote{ultralight}, \enquote{light}, \enquote{normal}, \enquote{regular}, \enquote{book}, \enquote{medium}, \enquote{roman}, \enquote{semibold}, \enquote{demibold}, \enquote{demi}, \enquote{bold}, \enquote{heavy}, 'extra bold', \enquote{black}.
+    \item[\gls*{paralabelpos}:] \label{item:paralabelpos}  List of 4 values (Default: None) that control whether parallels are labelled where they intersect the left, right, top or bottom of the plot. For example labels=[1, 0, 0, 1] will cause parallels to be labelled where they intersect the left and and bottom of the plot, but not the right and top.
+    \item[\gls*{grid}:] \label{item:grid}  Enables the plotting of the grid on the axes if not None (Default: False).
+    \item[\gls*{axiscolor}:] \label{item:axiscolor}  string or color for axis or dictionary (Default: {\enquote{top}: None, \enquote{right}: None, \enquote{bottom}: None, \enquote{left}: None}). If string or color this will set the default value for all axis. If dictionary, keys must be in [\enquote{right}, \enquote{left}, \enquote{top}, \enquote{bottom}] and the values must be a string or color to set the color for \enquote{right}, \enquote{left}, \enquote{top} or \enquote{bottom} specificly.
+    \item[\gls*{ocean_color}:] \label{item:ocean_color}  color instance (Default: None). Specify the color of the ocean. Attention! Might reduce the performance a lot if multiple plots are opened! To not kill everything, use the MapBase.share.lsmask method of the specific MapBase instance.
+    \item[\gls*{lineshapes}:] \label{item:lineshapes}  string, list of strings or dictionary. (Default: None). Draw polygons on the map from a shapefile.
+\begin{itemize}
+    \item If string or list of strings this will be seen as the values for the COUNTRY field in the default shapefile (see \enquote{ifile} below) and all matching polygons in this shape file will be merged.
+    \item If dictionary possible keys are
+\begin{itemize}
+        \item \enquote{ifile} to give an input shapefile (if not set, use the shapes from the default shape file located at /home/chilipp/Dokumente/myplots-scripts/nc2map/data/countries\_and\_continents\_vmap0 This Shapefile is based upon the bnd-political-boundary-a.shp shapes from the Vmap0 Dataset from GIS-Lab (http://gis-lab.info/qa/vmap0-eng.html), accessed May 2015.
+        \item \enquote{ofile} for the target shape file if specific shapes are selected or \enquote{dissolve} is set to False
+        \item \enquote{dissolve}. True/False (Default: False). If True, all polygons will be merged into one single shape
+        \item any field name in the input shape file (see nc2map.get\_fnames and nc2map.get\_unique\_vals function) to select specific shapes
+        \item any other key (but the \enquote{name} key) which is finally passed to the readshapefile method (e.g. \enquote{color} or \enquote{linewidth})\\
+ Each shape is uniquely defined through a key. If you use a dictionary d with the settings described above, you can set the key manually via {'my\_own\_key': d}. Otherwise a key like 'shape\%i' will automatically be assigned, where '\%i' depends on the number of already existing shapes.\\
+ You can use these keys to remove a shape from the current plot by simply setting shapes='key\_to\_remove' (or whatever key you want to remove). Otherwise you can remove all drawn shapes with anything that evaluates to False (e.g. shapes=None). Please note that it might take a while to dissolve all polygons if \enquote{dissolve} is set to True and even to extract them if the shapefile is large. Therefore, if you use the shape on multiple plots, use the share.lineshapes method of the specific MapBase instance
+\end{itemize}
+\end{itemize}
+
+
+    \item[\gls*{rasterized}:] \label{item:rasterized}  Boolean (Default: True). Rasterize the pcolormesh (i.e. the mapplot) or not.
+    \item[\gls*{countries}:] \label{item:countries}  Boolean (Default: False). If True, draw country borders.
+    \item[\gls*{title}:] \label{item:title}  string (Default: None). Defines the title of the plot. Metadata keys (var, time, level, or netCDF attributes like long\_name, units, ...) maybe replaced via \%(key)s. If the time information in the reader (i.e. NetCDF file) is stored in relative (e.g. hours since ...) or absolute (day as \%Y\%m\%d.f) units, directives like \%Y for year or \%m for the month as given by the python datetime package, are also replaced by the specific time information. There are furthermore some special keys which are replaced when you insert '{key}' in your text (e.g. {tinfo}). Those are tinfo: \%B \%d, \%Y. \%H:\%M dinfo: \%B \%d, \%Y Those special keys are defined in the nc2map.defaults.texts[\enquote{labels}] dictionary. This is the title of this specific axes! For the title of the figure see figtitle
+    \item[\gls*{meridionals}:] \label{item:meridionals}  1D-array or integer (Default: 7). Defines the lines where to draw meridionals. Possible types are
+\begin{itemize}
+    \item 1D-array: manually specify the location of the meridionals
+    \item integer: Gives the number of meridionals between maximal and minimal longitude (including max- and minimum line)
+\end{itemize}
+
+    \item[\gls*{land_color}:] \label{item:land_color}  color instance (Default: None). Specify the color of the land. 
+    \item[\gls*{tickweight}:] \label{item:tickweight}  Fontweight of ticks (Default: Defined by fontweight property). See fontweight above for possible values.
+    \item[\gls*{figtitle}:] \label{item:figtitle}  string (Default: None). Defines the figure suptitle of the plot.
+    \item[\gls*{fontsize}:] \label{item:fontsize}  string or float (Default: None). Defines the default size of ticks, axis labels and title. Strings might be 'xx-small', 'x-small', \enquote{small}, \enquote{medium}, \enquote{large}, 'x-large', 'xx-large'. Floats define the absolute font size, e.g., 12
+\end{description}
+
+\section{Colorbar and colormap formatoptions}
+\begin{description}
+    \item[\gls*{plotcbar}:] \label{item:plotcbar}  String or list of possible strings (see below). Default: [\enquote{b}]. Determines where to plot the colorbar. Possibilities are \enquote{b} for at the bottom of the plot, \enquote{r} for at the right side of the plot, \enquote{sh} for a horizontal colorbar in a separate figure, \enquote{sv} for a vertical colorbar in a separate figure. For no colorbar use '', None, False, [], etc. A string may be a combination of multiple positions (e.g. \enquote{bsh} will draw a colorbar at the bottom of the plot and a separate horizontal one).
+    \item[\gls*{extend}:] \label{item:extend}  string (\enquote{neither}, \enquote{both}, \enquote{min} or \enquote{max}) (Default: neither). If not \enquote{neither}, make pointed end(s) for out-of-range values. These are set for a given colormap using the colormap set\_under and set\_over methods.
+    \item[\gls*{ctickweight}:] \label{item:ctickweight}  Fontweight of colorbar ticks (Default: Defined by fontweight property). See fontweight above for possible values.
+    \item[\gls*{ticklabels}:] \label{item:ticklabels}  Array (Default: None). Defines the ticklabels of the colorbar
+    \item[\gls*{bounds}:] \label{item:bounds}  1D-array, tuple or string (Default: (\enquote{rounded}, 11)). Defines the bounds used for the colormap. Possible types are
+\begin{itemize}
+    \item 1D-array: Defines the bounds directly by giving the values
+    \item tuple (string, N): Compute the bounds automatically. N gives the number of increments whereas string can be one of the following strings
+\begin{itemize}
+        \item \enquote{rounded}: Rounds min and maxvalue of the data to the next 0.5-value with respect to its exponent with base 10 (i.e. 1.3e-4 will be rounded to 1.5e-4)
+        \item \enquote{roundedsym}: Same as \enquote{rounded} but symmetric around zero using the maximum of the data maximum and (absolute value of) data minimum.
+        \item \enquote{minmax}: Uses minimum and maximum of the data (without rounding)
+        \item \enquote{sym}: Same as \enquote{minmax} but symmetric around 0 (see \enquote{rounded} and \enquote{roundedsym}).
+\end{itemize}
+
+    \item tuple (string, N, percentile): Same as (string, N) but uses the percentiles defined in the 1D-list percentile as maximum. percentile must have length 2 with [minperc, maxperc]
+    \item string: same as tuple with N automatically set to 11.
+\end{itemize}
+
+    \item[\gls*{cticksize}:] \label{item:cticksize}  string or float (Default: medium). Defines the size of the colorbar ticks (see fontsize for possible values)
+    \item[\gls*{cmap}:] \label{item:cmap}  string or colormap (e.g.matplotlib.colors.LinearSegmentedColormap) (Default: jet). Defines the used colormap. If cmap is a colormap, nothing will happen. Otherwise if cmap is a string, a colorbar will be chosen. Possible strings are
+\begin{itemize}
+    \item 'red\_white\_blue' (e.g. for symmetric precipitation colorbars)
+    \item 'white\_red\_blue' (e.g. for asymmetric precipitation colorbars)
+    \item 'blue\_white\_red' (e.g. for symmetric temperature colorbars)
+    \item 'white\_blue\_red' (e.g. for asymmetric temperature colorbars)
+    \item any other name of a standard colorbar as provided by pyplot (e.g. \enquote{jet},\enquote{Greens},\enquote{binary}, etc.). Use function nc2map.show\_colormaps to visualize them.
+\end{itemize}
+
+    \item[\gls*{ticks}:] \label{item:ticks}  1D-array or integer (Default: None). Define the ticks of the colorbar. In case of an integer i, every i-th value of the default ticks will be used.
+\end{description}
+
+\section{Masking properties}
+\begin{description}
+    \item[\gls*{maskgreater}:] \label{item:maskgreater}  Float (Default: None). All data greater than this value is masked (see also maskgeq)
+    \item[\gls*{maskbetween}:] \label{item:maskbetween}  Tuple or list (Default: None). Pair (min, max) between which the data shall be masked
+    \item[\gls*{maskless}:] \label{item:maskless}  Float (Default: None). All data less than this value is masked (see also maskleq)
+    \item[\gls*{maskleq}:] \label{item:maskleq}  Float (Default: None). All data less or equal than this value is masked (see also maskless)
+    \item[\gls*{maskgeq}:] \label{item:maskgeq}  Float (Default: None). All data greater or equal than this value is masked (see also maskgreater)
+\end{description}
+
+\section{Windplot specific formatoptions}
+\begin{description}
+    \item[\gls*{arrowsize}:] \label{item:arrowsize}  float (Default: 1.0). Defines the size of the arrows
+    \item[\gls*{arrowstyle}:] \label{item:arrowstyle}  string (Default: $-|>$). Defines the style of the arrows (See :class:`~matplotlib.patches.FancyArrowPatch`)
+    \item[\gls*{clabel}:] \label{item:clabel}  string (Default: None). Defines the label of the colorbar (if plotcbar is True). Metadata keys (var, time, level, or netCDF attributes like long\_name, units, ...) maybe replaced via \%(key)s. If the time information in the reader (i.e. NetCDF file) is stored in relative (e.g. hours since ...) or absolute (day as \%Y\%m\%d.f) units, directives like \%Y for year or \%m for the month as given by the python datetime package, are also replaced by the specific time information. There are furthermore some special keys which are replaced when you insert '{key}' in your text (e.g. {tinfo}). Those are tinfo: \%B \%d, \%Y. \%H:\%M dinfo: \%B \%d, \%Y Those special keys are defined in the nc2map.defaults.texts[\enquote{labels}] dictionary.
+    \item[\gls*{color}:] \label{item:color}  string (\enquote{absolute}, \enquote{u} or \enquote{v}), matplotlib color code or 2D-array (Default: k). Defines the color behaviour. Possible types are
+\begin{itemize}
+    \item 2D-array (which has to match the shape of of u and v): The values determine the colorcoding according to \enquote{cmap}
+    \item \enquote{absolute}, \enquote{u} or \enquote{v}: a color coding 2D-array is computed and make the colorcode corresponding to the absolute flow or u or v.
+    \item single letter (\enquote{b}: blue, \enquote{g}: green, \enquote{r}: red, \enquote{c}: cyan, \enquote{m}: magenta, \enquote{y}: yellow, \enquote{k}: black, \enquote{w}: white): Color for all arrows
+    \item float between 0 and 1 (defines the greyness): Color for all arrows
+    \item html hex string (e.g. '\#eeefff'): Color for all arrows
+\end{itemize}
+
+    \item[\gls*{density}:] \label{item:density}  Float or tuple (Default: 1.0). Value scaling the density of the arrows (1 means no density scaling)
+\begin{itemize}
+    \item If float, this is the value for longitudes and latitudes.
+    \item If tuple (x, y), x scales the longitudes and y the latitude. Please note that for quiver plots (i.e. streamplot=False) densities > 1 are not possible. Densities of quiver plots are scaled using the weighted mean. Densities of streamplots are scaled using the density keyword of the pyplot.streamplot function. See also reduceabove for quiver plots.
+\end{itemize}
+
+    \item[\gls*{enable}:] \label{item:enable}  Boolean (Default: True). Allows the plot on the axes
+    \item[\gls*{lengthscale}:] \label{item:lengthscale}  String (Default: lin). If \enquote{log} the length of the quiver plot arrows are scaled logarithmically via $\mathrm{speed}=\sqrt{\log(\mathrm{u})^2+\log(\mathrm{v})^2}$. This affects only quiver plots (i.e. streamplot=False).
+    \item[\gls*{linewidth}:] \label{item:linewidth}  float, string (\enquote{absolute}, \enquote{u} or \enquote{v}) or 2D-array (Default: 0). Defines the linewidth behaviour. Possible types are
+\begin{itemize}
+    \item float: give the linewidth explicitly
+    \item 2D-array (which has to match the shape of of u and v): The values determine the linewidth according to the given numbers
+    \item \enquote{absolute}, \enquote{u} or \enquote{v}: a normalized 2D-array is computed and makes the colorcode corresponding to the absolute flow of u or v. A further scaling can be done via the \enquote{scale} key (see above). Higher \enquote{scale} corresponds to higher linewidth.
+\end{itemize}
+
+    \item[\gls*{reduceabove}:] \label{item:reduceabove}  Tuple or list (perc, pctl) with floats. (Default: None). Reduces the resolution to \enquote{perc} of the original resolution if in the area defined by \enquote{perc} average speed is higher than the pctl-th percentile. \enquote{perc} can be a float 0$\leq$f$\leq$1 or a tuple (x, y) in this range. If float, this is the value for longitudes and latitudes. If tuple (x, y), x scales the longitudes and y the latitude. This defines the scaling of the density (see also density keyword). pctl can be a float between 0 and 100. This formatoption is for quiver plots (i.e. streamplot=False) only. To reduce the resolution of streamplots, use density keyword.
+    \item[\gls*{scale}:] \label{item:scale}  Float (Default: 1.0). Scales the length of the arrows. Affects only quiver plots (i.e. streamplot=False).
+    \item[\gls*{streamplot}:] \label{item:streamplot}  Boolean (Default: False). If True, a pyplot.streamplot() will be used instead of a pyplot.quiver()
+\end{description}
+
+\section{LinePlot specific formatoptions}
+\begin{description}
+    \item[\gls*{legend}:] \label{item:legend}  location value or dictionary (Default: None). Draw a legend on the axes. If string or integer, this will be used for the location keyword. If dictionary, the settings of this dictionary will be used. Possible keys for the dictionary are given in the following parameter list: Parameters ---------- loc : int or string or pair of floats, default: 0 The location of the legend. Possible codes are: =============== ============= Location String Location Code =============== ============= \enquote{best} 0 'upper right' 1 'upper left' 2 'lower left' 3 'lower right' 4 \enquote{right} 5 'center left' 6 'center right' 7 'lower center' 8 'upper center' 9 \enquote{center} 10 =============== ============= Alternatively can be a 2-tuple giving ``x, y`` of the lower-left corner of the legend in axes coordinates (in which case ``bbox\_to\_anchor`` will be ignored). bbox\_to\_anchor : :class:`matplotlib.transforms.BboxBase` instance or tuple of floats Specify any arbitrary location for the legend in `bbox\_transform` coordinates (default Axes coordinates). For example, to put the legend's upper right hand corner in the center of the axes the following keywords can be used:: loc='upper right', bbox\_to\_anchor=(0.5, 0.5) ncol : integer The number of columns that the legend has. Default is 1. prop : None or :class:`matplotlib.font\_manager.FontProperties` or dict The font properties of the legend. If None (default), the current :data:`matplotlib.rcParams` will be used. fontsize : int or float or {'xx-small', 'x-small', \enquote{small}, \enquote{medium}, \enquote{large}, 'x-large', 'xx-large'} Controls the font size of the legend. If the value is numeric the size will be the absolute font size in points. String values are relative to the current default font size. This argument is only used if `prop` is not specified. numpoints : None or int The number of marker points in the legend when creating a legend entry for a line/:class:`matplotlib.lines.Line2D`. Default is ``None`` which will take the value from the ``legend.numpoints`` :data:`rcParam$<$matplotlib.rcParams>`. scatterpoints : None or int The number of marker points in the legend when creating a legend entry for a scatter plot/ :class:`matplotlib.collections.PathCollection`. Default is ``None`` which will take the value from the ``legend.scatterpoints`` :data:`rcParam$<$matplotlib.rcParams>`. scatteryoffsets : iterable of floats The vertical offset (relative to the font size) for the markers created for a scatter plot legend entry. 0.0 is at the base the legend text, and 1.0 is at the top. To draw all markers at the same height, set to ``[0.5]``. Default ``[0.375, 0.5, 0.3125]``. markerscale : None or int or float The relative size of legend markers compared with the originally drawn ones. Default is ``None`` which will take the value from the ``legend.markerscale`` :data:`rcParam <matplotlib.rcParams>`. frameon : None or bool Control whether a frame should be drawn around the legend. Default is ``None`` which will take the value from the ``legend.frameon`` :data:`rcParam$<$matplotlib.rcParams>`. fancybox : None or bool Control whether round edges should be enabled around the :class:`~matplotlib.patches.FancyBboxPatch` which makes up the legend's background. Default is ``None`` which will take the value from the ``legend.fancybox`` :data:`rcParam$<$matplotlib.rcParams>`. shadow : None or bool Control whether to draw a shadow behind the legend. Default is ``None`` which will take the value from the ``legend.shadow`` :data:`rcParam$<$matplotlib.rcParams>`. framealpha : None or float Control the alpha transparency of the legend's frame. Default is ``None`` which will take the value from the ``legend.framealpha`` :data:`rcParam$<$matplotlib.rcParams>`. mode : {"expand", None} If `mode` is set to ``"expand"`` the legend will be horizontally expanded to fill the axes area (or `bbox\_to\_anchor` if defines the legend's size). bbox\_transform : None or :class:`matplotlib.transforms.Transform` The transform for the bounding box (`bbox\_to\_anchor`). For a value of ``None`` (default) the Axes' :data:`~matplotlib.axes.Axes.transAxes` transform will be used. title : str or None The legend's title. Default is no title (``None``). borderpad : float or None The fractional whitespace inside the legend border. Measured in font-size units. Default is ``None`` which will take the value from the ``legend.borderpad`` :data:`rcParam$<$matplotlib.rcParams>`. labelspacing : float or None The vertical space between the legend entries. Measured in font-size units. Default is ``None`` which will take the value from the ``legend.labelspacing`` :data:`rcParam$<$matplotlib.rcParams>`. handlelength : float or None The length of the legend handles. Measured in font-size units. Default is ``None`` which will take the value from the ``legend.handlelength`` :data:`rcParam$<$matplotlib.rcParams>`. handletextpad : float or None The pad between the legend handle and text. Measured in font-size units. Default is ``None`` which will take the value from the ``legend.handletextpad`` :data:`rcParam$<$matplotlib.rcParams>`. borderaxespad : float or None The pad between the axes and legend border. Measured in font-size units. Default is ``None`` which will take the value from the ``legend.borderaxespad`` :data:`rcParam$<$matplotlib.rcParams>`. columnspacing : float or None The spacing between columns. Measured in font-size units. Default is ``None`` which will take the value from the ``legend.columnspacing`` :data:`rcParam$<$matplotlib.rcParams>`. handler\_map : dict or None The custom dictionary mapping instances or types to a legend handler. This `handler\_map` updates the default handler map found at :func:`matplotlib.legend.Legend.get\_legend\_handler\_map`. Notes ----- Not all kinds of artist are supported by the legend command. See :ref:`plotting-guide-legend` for details. Examples -------- .. plot:: mpl\_examples/api/legend\_demo.py
+    \item[\gls*{xlabel}:] \label{item:xlabel}  string (Default: None). Defines the x-axis label
+    \item[\gls*{xlim}:] \label{item:xlim}  tuple (Default: None). Specifies the limits of the x-axis
+    \item[\gls*{xrotation}:] \label{item:xrotation}  float (Default 0). Degrees between 0 and 360 for which the xticklabels shall be rotated
+    \item[\gls*{xticklabels}:] \label{item:xticklabels}  format string, 1D-array or dictionary (Default: None). Defines the y-axis ticklabels.
+\begin{itemize}
+    \item If None, the automatically calculated y-ticklabels will be used.
+    \item If format string (e.g. '\%0.0f' for integers, '\%1.2e' for scientific or '\%b' for the month if time is plotted on the axis.
+    \item If 1D-array, those will be used for the yticklabels. (Note: The length should match to the used yticks
+    \item If dictionary, possible keys are \enquote{minor} for minor ticks and \enquote{major} for major ticks. Values can be in either of the styles described above. Note: To enable minor ticks, you use the xticks formatoption
+\end{itemize}
+
+    \item[\gls*{xticks}:] \label{item:xticks}  integer, 1D-array or dictionary (Default: None). Defines the x-ticks.
+\begin{itemize}
+    \item If None, the automatically calculated x-ticks will be used.
+    \item If integer i, every i-th tick of the automatically calculated ticks will be used.
+    \item If 1D-array, those will be used for the xticks.
+    \item If dictionary, possible keys are \enquote{minor} for minor ticks and \enquote{major} for major ticks. Values can be in any of the styles described above. Another possible key is \enquote{pad} to define the vertical difference between minor and major ticks. By default, those are calculated from the ticksize formatoption
+\end{itemize}
+
+    \item[\gls*{ylabel}:] \label{item:ylabel}  string (Default: None). Defines the y-axis label
+    \item[\gls*{ylim}:] \label{item:ylim}  tuple (Default: None). Specifies the limits of the y-axis
+    \item[\gls*{yrotation}:] \label{item:yrotation}  float (Default 0). Degrees between 0 and 360 for which the xticklabels shall be rotated
+    \item[\gls*{yticklabels}:] \label{item:yticklabels}  format string, 1D-array or dictionary (Default: None). Defines the y-axis ticklabels.
+\begin{itemize}
+    \item If None, the automatically calculated y-ticklabels will be used.
+    \item If format string (e.g. '\%0.0f' for integers, '\%1.2e' for scientific or '\%b' for the month if time is plotted on the axis.
+    \item If 1D-array, those will be used for the yticklabels. (Note: The length should match to the used yticks
+    \item If dictionary, possible keys are \enquote{minor} for minor ticks and \enquote{major} for major ticks. Values can be in any of the styles described above. Note: To enable minor ticks, you use the yticks formatoption
+\end{itemize}
+
+    \item[\gls*{yticks}:] \label{item:yticks}  integer, 1D-array or dictionary (Default: None). Defines the y-ticks.
+\begin{itemize}
+    \item If None, the automatically calculated y-ticks will be used.
+    \item If integer i, every i-th tick of the automatically calculated ticks will be used.
+    \item If 1D-array, those will be used for the yticks.
+    \item If dictionary, possible keys are \enquote{minor} for minor ticks and \enquote{major} for major ticks. Values can be in any of the styles described above. Another possible key is \enquote{pad} to define the vertical difference between minor and major ticks. By default, those are calculated from the ticksize formatoption
+\end{itemize}
+
+\end{description}
+
+\section{Miscallaneous formatoptions}
+\begin{description}
+    \item[\gls*{windplot}:] \label{item:windplot} 
+        WindFmt instance. (Default initialized by $\lbrace\rbrace$). Defines the properties
+        of the wind plot. Can be set either directly via a WindFmt instance or
+        with a dictionary containing the formatoptions  (see
+        show\_fmtkeys(\enquote{wind}, \enquote{windonly})
+\end{description}
+

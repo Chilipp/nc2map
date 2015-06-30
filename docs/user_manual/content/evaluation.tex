@@ -1,0 +1,53 @@
+% !TeX root = ../user_manual.tex
+\chapter{Evaluation routines} \label{ch:eval}
+There are three possible evaluation methods that are incorporated in the \gls{nc2map} module. I will explain the main principles for application, however please look into the \lstinline|nc2map/demo| directory for direct application examples and use the python \lstinline|help| function.
+
+\section{Incorporation of Climate Data Operators} \label{sec:cdo}
+\glspl{cdo} are implemented via the \glssymbol{cdo} class, which itself is based upon the \lstinline|Cdo| class of the \lstinline|cdo.py| python module\footnote{\url{https://code.zmaw.de/projects/cdo/wiki/Cdo{rbpy}}}. There are four new keywords implemented for each operator:
+\begin{description}
+	\item[returnMaps] takes None, a string or list of strings (the variable
+	              names) or a dictionary (keys and values are determined by the
+	              \gls{Maps} method). None will open maps for all
+	              variables that have longitude and latitude dimensions in it.
+	              An open \gls{Maps} instance is returned.
+	\item[returnMap] takes a string (the variable name) or a dictionary
+	              (keys and values are determined by the
+	              \gls{FieldPlot} method). An open \gls{FieldPlot}
+	              instance is returned
+	\item[returnLine] takes a string or list of strings (the variable
+	              names) or a dictionary (keys and values are determined by the
+	              \gls{LinePlot} method). An open \gls{LinePlot} instance is returned
+	\item[returnData] takes a string or list of strings (the variable
+	              names) or a dictionary (keys and values are determined by
+	              the \gls{reader.get_data} method).
+	              It returns a \gls{DataField} instance of the
+	              specified variables, with datashape='any'.
+\end{description}
+Hence you can not only evaluate your results with cdos, but also immediately visualize the data. See the \lstinline|nc2map/demo/cdo_demo.py| for a demonstration of the possibilities.
+
+\section{Calculation} \label{sec:calculation}
+As stated in \autoref{ch:data}, there exist basically three levels. On the lowest two levels (the \gls{MapBase} and \gls{reader} level), you can perform calculations like multiplication, subtraction, power, division or addition. The great advantage is, that you immediately can visualize your result, change meta data, etc. You can find a demo file in \lstinline|nc2map/demo/calculation_demo.py|.
+
+There are however a few rules that you should consider concerning arithmetics between \gls{MapBase} instances:
+\begin{enumerate}
+	\item When you apply arithmetics with MapBase instances, the MapBase first extracts it's data in it's \gls{reader} and creates a new reader where it now takes the data from. Therefore, the new reader will (for example) have only one single time step, one single level, etc..
+	\item You can add floats, \lstinline|numpy.ndarrays| matching the shape of the \gls{MapBase}\lstinline|.data| attribute, other \gls{MapBase} instances\footnote{you can only calculate between scalar fields (i.e. \gls{FieldPlot} with \gls{FieldPlot}) or between vector fields (i.e. \gls{WindPlot} with \gls{WindPlot}), but not mix the two classes} or other \glspl{reader}.
+	\item The resulting \gls{MapBase} will have set all dimensions set to 0 (this does only matter, if you perform arithmetics with a \gls{reader}).
+\end{enumerate}
+
+If you want to perform arithmetics between readers (e.g. to consider the full data and not only one two-dimensional array), there are also some rules:
+\begin{enumerate}
+	\item You can add floats, \lstinline|numpy.ndarrays| matching the shape of the \gls{MapBase}\lstinline|.data| attribute or other \glspl{reader}. If you have a \lstinline|numpy.ndarrays|, the shape has to match the shape of the variables in the reader (this implies that all variables that are not dimensional data (e.g. \gls{time}) must have the same shape).
+	\item If you add another \gls{reader}, it can have 
+	\begin{enumerate}
+		\item all the same variables or only one variable which will then be added to the variables of the other \gls{reader}
+		\item only one time step which will then be added to all the other time steps in the other \gls{reader}
+		\item only one level which will then be added to all the other levels in the other \gls{reader}
+	\end{enumerate}
+\end{enumerate}
+It has not been evaluated so far with large data sets, but feel free to do it and I would be happy for results :) However it is generally faster to make calculations on the \gls{reader} level than on the \gls{MapBase} level.
+
+\section{Evaluator classes} \label{sec:evaluators}
+Additionally to the cdo interface (see \autoref{sec:cdo}) there are (currently) two evaluators implemented (the \gls{FldMeanEvaluator} and \gls{ViolinEvaluator}), which you can access via the \gls{Maps.evaluate} method of your \gls{Maps} instance. Those evaluators both possibly can evaluate multiple regions at the same time. The region definition is thereby determined by the \hyperref[item:mask]{mask} \gls{fmt} keyword. However you can of course simply zoom to the region that you are interested in (see the \hyperref[item:lonlatbox]{lonlatbox} keyword) and make an evaluation without specifying the regions.
+
+For an example look into the \lstinline|nc2map/demo/evaluators_demo.py| script.

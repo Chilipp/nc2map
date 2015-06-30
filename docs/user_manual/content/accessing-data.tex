@@ -1,0 +1,20 @@
+% !TeX root = ../user_manual.tex
+\chapter{Data management} \label{ch:data}
+There are basically three levels in the \gls{nc2map} module.
+\begin{enumerate}
+	\item The \gls{reader} level (the data in the NetCDF file)
+	\item The \gls{MapBase} level (the plot with the extracted data from the \gls{reader})
+	\item The \gls{Maps} level (all plots together)
+\end{enumerate}
+
+\section{Data Readers} \label{sec:readers}
+As stated already in \autoref{sec:init_nc}, \gls{nc2map} uses the python \lstinline|netCDF4.Dataset| and \lstinline|netCDF4.MFDataset| classes to read from NetCDF files. Therefore those classes are incorporated as \glssymbol{NCReader} and \glssymbol{MFNCReader} classes, which themselves are subclasses of the \glssymbol{reader} class. This is due to the fact that the \lstinline|netCDF4| classes provide only the basic data accessing methods. Furthermore for future purposes maybe other formats (e.g. GeoTIFF) may be supported. Anyway, for the \lstinline|nc2map| module an easier access to the data via the \gls{reader.get_data} method is provided. You can specify the desired datashape (2d, 3d or 4d) and, the variable and further dimensions. Furthermore you can perform arithmetics with those readers (e.g. subtraction, division, etc., see section \ref{sec:calculation}).
+
+\section{\texttt{MapBase} instances in \texttt{nc2map.Maps}} \label{sec:MapBase}
+All \gls{MapBase} instances are stored in the \lstinline|maps| attribute of the specific \gls{Maps} instance. However there is no need for you to manually figure out which of the \gls{MapBase} instances is the one you need. Instead you can use the \gls{MapsManager.get_maps} method of the \gls{Maps} class and specify what you need via the meta attributes of the variables. For example if you want to get the \gls{MapBase} instances corresponding to the variable \lstinline|t2m|, simply use
+\begin{lstlisting}
+	mymaps = nc2map.Maps('my-netcdf-file.nc')
+	mapos = mymaps.get_maps(vlst='t2m')
+\end{lstlisting}
+A MapBase instance extracts the two dimensional data with its \gls{MapBase.get_data} method. The data is then stored in the \gls{FieldPlot.data} attribute, together with \gls{time} information, latitude and longitude fields, as well as the \gls{level} information (use the \lstinline|help| function for details). Furthermore you can access the full data via the \gls{reader} attribute of the \gls{MapBase} instance (see next \autoref{sec:readers}). The data is a \glssymbol{DataField} instance, a wrapper around a \lstinline|numpy.ma.MaskedArray| providing additional informations (like the \lstinline|dimensions| that correspond to each axes or the dimension data in the \gls{DataField}\lstinline|.dims| attribute) and methods (like a weighted \lstinline|percentile| method, \lstinline|fldmean|, \lstinline|fldstd|, etc.). For a \gls{MapBase} instance \lstinline|mapo|, you can access the data array simply via
+\lstinline|mapo.data[:]|\footnote{Note: The \gls{DataField} class probably will implemented as a subclass of the \lstinline|numpy.ma.MaskedArray|.} In general, the \gls{MapBase} instances do not reduce the size of the two-dimensional field, but mask all entries that are not needed (e.g. if you use a global NetCDF file but show only a part of the globe with the \hyperref[item:lonlatbox]{lonlatbox} formatoption keyword). The same holds for the \hyperref[item:density]{density} formatoption for \gls{WindPlot} (if \hyperref[item:streamplot]{streamplot} is set to \lstinline|False|). This will only mask unneeded entries and visualize the mean of the now masked entries, but will not decrease the size of the array. To permanently decrease the array, use other tools like \glspl{cdo}.

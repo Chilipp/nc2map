@@ -1,0 +1,332 @@
+\glossaryentry{ViolinPlot?\glossentry{ViolinPlot}|glsseeformat[\seename ]{ViolinEvaluator}}{Z}
+\glossaryentry{MapBase?\glossentry{MapBase}!MapBase.get\_data?\subglossentry{1}{MapBase.get_data}|glsseeformat[\seename ]{reader.get_data}}{Z}
+\glossaryentry{nc2map?\glossentry{nc2map}!load?\subglossentry{1}{nc2map.load}|glsseeformat[\seename ]{Maps.save}}{Z}
+\glossaryentry{MapsManager?\glossentry{MapsManager}!Maps?\subglossentry{1}{Maps}!output?\subglossentry{2}{Maps.output}|glsseeformat[\seename ]{Maps.make_movie}}{Z}
+\glossaryentry{MapsManager?\glossentry{MapsManager}!Maps?\subglossentry{1}{Maps}!make\_movie?\subglossentry{2}{Maps.make_movie}|glsseeformat[\seename ]{Maps.output}}{Z}
+\glossaryentry{MapsManager?\glossentry{MapsManager}!get\_label\_dict?\subglossentry{1}{MapsManager.get_label_dict}|glsseeformat[\seename ]{MapsManager.meta,MapBase.meta}}{Z}
+\glossaryentry{MapsManager?\glossentry{MapsManager}!Maps?\subglossentry{1}{Maps}!save?\subglossentry{2}{Maps.save}|glsseeformat[\seename ]{nc2map.load}}{Z}
+\glossaryentry{MapsManager?\glossentry{MapsManager}!Maps?\subglossentry{1}{Maps}!evaluate?\subglossentry{2}{Maps.evaluate}|glsseeformat[\seename ]{FldMeanEvaluator,ViolinEvaluator}}{Z}
+\glossaryentry{MapsManager?\glossentry{MapsManager}!Maps?\subglossentry{1}{Maps}!nextt?\subglossentry{2}{Maps.nextt}|glsseeformat[\seename ]{Maps.prevt}}{Z}
+\glossaryentry{MapsManager?\glossentry{MapsManager}!Maps?\subglossentry{1}{Maps}!prevt?\subglossentry{2}{Maps.prevt}|glsseeformat[\seename ]{Maps.nextt}}{Z}
+\glossaryentry{formatoption?\glossentry{fmt}!show\_fmtkeys?\subglossentry{1}{show_fmtkeys}|glsseeformat[\seename ]{get_fmtkeys}}{Z}
+\glossaryentry{formatoption?\glossentry{fmt}!get\_fmtkeys?\subglossentry{1}{get_fmtkeys}|glsseeformat[\seename ]{show_fmtkeys}}{Z}
+\glossaryentry{formatoption?\glossentry{fmt}!show\_fmtdocs?\subglossentry{1}{show_fmtdocs}|glsseeformat[\seename ]{get_fmtdocs}}{Z}
+\glossaryentry{formatoption?\glossentry{fmt}!get\_fmtdocs?\subglossentry{1}{get_fmtdocs}|glsseeformat[\seename ]{show_fmtdocs}}{Z}
+\glossaryentry{get\_fnames?\glossentry{nc2map.get_fnames}|glsseeformat[\seename ]{nc2map.get_unique_vals}}{Z}
+\glossaryentry{get\_unique\_vals?\glossentry{nc2map.get_unique_vals}|glsseeformat[\seename ]{nc2map.get_fnames}}{Z}
+\glossaryentry{evaluator?\glossentry{evaluator}|glsseeformat[\seename ]{Maps.evaluate}}{Z}
+\glossaryentry{evaluator?\glossentry{evaluator}!ViolinEvaluator?\subglossentry{1}{ViolinEvaluator}|glsseeformat[\seename ]{ViolinPlot}}{Z}
+\glossaryentry{DataField?\glossentry{DataField}|glsseeformat[\seename ]{reader.get_data}}{Z}
+\glossaryentry{Dimension identifiers?\glossentry{dimsidentifier}|setentrycounter[]{page}\glsnumberformat}{ii}
+\glossaryentry{formatoption?\glossentry{fmt}|setentrycounter[]{page}\glsnumberformat}{ii}
+\glossaryentry{formatoption?\glossentry{fmt}|setentrycounter[]{page}\glsnumberformat}{ii}
+\glossaryentry{nc2map?\glossentry{nc2map}|setentrycounter[]{page}\glsnumberformat}{2}
+\glossaryentry{nc2map?\glossentry{nc2map}|setentrycounter[]{page}\glsnumberformat}{2}
+\glossaryentry{nc2map?\glossentry{nc2map}|setentrycounter[]{page}\glsnumberformat}{2}
+\glossaryentry{MapBase?\glossentry{MapBase}|setentrycounter[]{page}\glsnumberformat}{2}
+\glossaryentry{MapsManager?\glossentry{MapsManager}|setentrycounter[]{page}\glsnumberformat}{2}
+\glossaryentry{MapBase?\glossentry{MapBase}|setentrycounter[]{page}\glsnumberformat}{2}
+\glossaryentry{MapsManager?\glossentry{MapsManager}|setentrycounter[]{page}\glsnumberformat}{2}
+\glossaryentry{MapBase?\glossentry{MapBase}|setentrycounter[]{page}\glsnumberformat}{2}
+\glossaryentry{MapsManager?\glossentry{MapsManager}|setentrycounter[]{page}\glsnumberformat}{2}
+\glossaryentry{MapsManager?\glossentry{MapsManager}!Maps?\subglossentry{1}{Maps}|setentrycounter[]{page}\glsnumberformat}{2}
+\glossaryentry{MapBase?\glossentry{MapBase}|setentrycounter[]{page}\glsnumberformat}{2}
+\glossaryentry{MapsManager?\glossentry{MapsManager}!Maps?\subglossentry{1}{Maps}|setentrycounter[]{page}\glsnumberformat}{2}
+\glossaryentry{MapBase?\glossentry{MapBase}|setentrycounter[]{page}\glsnumberformat}{2}
+\glossaryentry{MapBase?\glossentry{MapBase}!FieldPlot?\subglossentry{1}{FieldPlot}|setentrycounter[]{page}\glsnumberformat}{2}
+\glossaryentry{MapBase?\glossentry{MapBase}!WindPlot?\subglossentry{1}{WindPlot}|setentrycounter[]{page}\glsnumberformat}{2}
+\glossaryentry{MapsManager?\glossentry{MapsManager}!Maps?\subglossentry{1}{Maps}|setentrycounter[]{page}\glsnumberformat}{2}
+\glossaryentry{MapsManager?\glossentry{MapsManager}!Maps?\subglossentry{1}{Maps}|setentrycounter[]{page}\glsnumberformat}{2}
+\glossaryentry{MapsManager?\glossentry{MapsManager}!Maps?\subglossentry{1}{Maps}!update?\subglossentry{2}{Maps.update}|setentrycounter[]{page}\glsnumberformat}{3}
+\glossaryentry{MapBase?\glossentry{MapBase}|setentrycounter[]{page}\glsnumberformat}{3}
+\glossaryentry{Dimension identifiers?\glossentry{dimsidentifier}!time?\subglossentry{1}{time}|setentrycounter[]{page}\glsnumberformat}{3}
+\glossaryentry{Dimension identifiers?\glossentry{dimsidentifier}!level?\subglossentry{1}{level}|setentrycounter[]{page}\glsnumberformat}{3}
+\glossaryentry{Dimension identifiers?\glossentry{dimsidentifier}!var?\subglossentry{1}{var}|setentrycounter[]{page}\glsnumberformat}{3}
+\glossaryentry{Dimension identifiers?\glossentry{dimsidentifier}!name?\subglossentry{1}{name}|setentrycounter[]{page}\glsnumberformat}{3}
+\glossaryentry{MapBase?\glossentry{MapBase}|setentrycounter[]{page}\glsnumberformat}{3}
+\glossaryentry{MapsManager?\glossentry{MapsManager}!Maps?\subglossentry{1}{Maps}!update?\subglossentry{2}{Maps.update}|setentrycounter[]{page}\glsnumberformat}{4}
+\glossaryentry{formatoption?\glossentry{fmt}|setentrycounter[]{page}\glsnumberformat}{4}
+\glossaryentry{formatoption?\glossentry{fmt}|setentrycounter[]{page}\glsnumberformat}{4}
+\glossaryentry{nc2map?\glossentry{nc2map}|setentrycounter[]{page}\glsnumberformat}{4}
+\glossaryentry{MapsManager?\glossentry{MapsManager}!Maps?\subglossentry{1}{Maps}|setentrycounter[]{page}\glsnumberformat}{4}
+\glossaryentry{reader?\glossentry{reader}!NCReader?\subglossentry{1}{NCReader}|setentrycounter[]{page}\glsnumberformat}{4}
+\glossaryentry{reader?\glossentry{reader}!MFNCReader?\subglossentry{1}{MFNCReader}|setentrycounter[]{page}\glsnumberformat}{4}
+\glossaryentry{MapsManager?\glossentry{MapsManager}!Maps?\subglossentry{1}{Maps}|setentrycounter[]{page}\glsnumberformat}{4}
+\glossaryentry{MapsManager?\glossentry{MapsManager}!Maps?\subglossentry{1}{Maps}|setentrycounter[]{page}\glsnumberformat}{4}
+\glossaryentry{reader?\glossentry{reader}!ArrayReader?\subglossentry{1}{ArrayReader}|setentrycounter[]{page}\glsnumberformat}{4}
+\glossaryentry{reader?\glossentry{reader}|setentrycounter[]{page}\glsnumberformat}{4}
+\glossaryentry{Dimension identifiers?\glossentry{dimsidentifier}|setentrycounter[]{page}\glsnumberformat}{5}
+\glossaryentry{MapsManager?\glossentry{MapsManager}!Maps?\subglossentry{1}{Maps}|setentrycounter[]{page}\glsnumberformat}{5}
+\glossaryentry{MapsManager?\glossentry{MapsManager}!Maps?\subglossentry{1}{Maps}|setentrycounter[]{page}\glsnumberformat}{5}
+\glossaryentry{MapBase?\glossentry{MapBase}|setentrycounter[]{page}\glsnumberformat}{5}
+\glossaryentry{MapBase?\glossentry{MapBase}|setentrycounter[]{page}\glsnumberformat}{5}
+\glossaryentry{Dimension identifiers?\glossentry{dimsidentifier}!name?\subglossentry{1}{name}|setentrycounter[]{page}\glsnumberformat}{5}
+\glossaryentry{MapsManager?\glossentry{MapsManager}!Maps?\subglossentry{1}{Maps}|setentrycounter[]{page}\glsnumberformat}{5}
+\glossaryentry{Dimension identifiers?\glossentry{dimsidentifier}!time?\subglossentry{1}{time}|setentrycounter[]{page}\glsnumberformat}{5}
+\glossaryentry{Dimension identifiers?\glossentry{dimsidentifier}!level?\subglossentry{1}{level}|setentrycounter[]{page}\glsnumberformat}{5}
+\glossaryentry{Dimension identifiers?\glossentry{dimsidentifier}!time?\subglossentry{1}{time}|setentrycounter[]{page}\glsnumberformat}{5}
+\glossaryentry{Dimension identifiers?\glossentry{dimsidentifier}!level?\subglossentry{1}{level}|setentrycounter[]{page}\glsnumberformat}{5}
+\glossaryentry{Dimension identifiers?\glossentry{dimsidentifier}!name?\subglossentry{1}{name}|setentrycounter[]{page}\glsnumberformat}{5}
+\glossaryentry{MapBase?\glossentry{MapBase}|setentrycounter[]{page}\glsnumberformat}{5}
+\glossaryentry{MapBase?\glossentry{MapBase}|setentrycounter[]{page}\glsnumberformat}{5}
+\glossaryentry{MapBase?\glossentry{MapBase}|setentrycounter[]{page}\glsnumberformat}{5}
+\glossaryentry{MapsManager?\glossentry{MapsManager}!Maps?\subglossentry{1}{Maps}!nextt?\subglossentry{2}{Maps.nextt}|setentrycounter[]{page}\glsnumberformat}{6}
+\glossaryentry{MapsManager?\glossentry{MapsManager}!Maps?\subglossentry{1}{Maps}!prevt?\subglossentry{2}{Maps.prevt}|setentrycounter[]{page}\glsnumberformat}{6}
+\glossaryentry{MapsManager?\glossentry{MapsManager}!Maps?\subglossentry{1}{Maps}|setentrycounter[]{page}\glsnumberformat}{6}
+\glossaryentry{MapsManager?\glossentry{MapsManager}!addmap?\subglossentry{1}{MapsManager.addmap}|setentrycounter[]{page}\glsnumberformat}{6}
+\glossaryentry{MapsManager?\glossentry{MapsManager}!Maps?\subglossentry{1}{Maps}|setentrycounter[]{page}\glsnumberformat}{6}
+\glossaryentry{MapsManager?\glossentry{MapsManager}!addline?\subglossentry{1}{MapsManager.addline}|setentrycounter[]{page}\glsnumberformat}{6}
+\glossaryentry{formatoption?\glossentry{fmt}|setentrycounter[]{page}\glsnumberformat}{6}
+\glossaryentry{formatoption?\glossentry{fmt}|setentrycounter[]{page}\glsnumberformat}{6}
+\glossaryentry{MapsManager?\glossentry{MapsManager}!Maps?\subglossentry{1}{Maps}|setentrycounter[]{page}\glsnumberformat}{6}
+\glossaryentry{MapsManager?\glossentry{MapsManager}!Maps?\subglossentry{1}{Maps}!update?\subglossentry{2}{Maps.update}|setentrycounter[]{page}\glsnumberformat}{6}
+\glossaryentry{formatoption?\glossentry{fmt}|setentrycounter[]{page}\glsnumberformat}{6}
+\glossaryentry{MapBase?\glossentry{MapBase}|setentrycounter[]{page}\glsnumberformat}{6}
+\glossaryentry{MapsManager?\glossentry{MapsManager}!Maps?\subglossentry{1}{Maps}|setentrycounter[]{page}\glsnumberformat}{6}
+\glossaryentry{MapBase?\glossentry{MapBase}|setentrycounter[]{page}\glsnumberformat}{6}
+\glossaryentry{formatoption?\glossentry{fmt}|setentrycounter[]{page}\glsnumberformat}{6}
+\glossaryentry{formatoption?\glossentry{fmt}|setentrycounter[]{page}\glsnumberformat}{6}
+\glossaryentry{formatoption?\glossentry{fmt}|setentrycounter[]{page}\glsnumberformat}{6}
+\glossaryentry{formatoption?\glossentry{fmt}|setentrycounter[]{page}\glsnumberformat}{6}
+\glossaryentry{formatoption?\glossentry{fmt}|setentrycounter[]{page}\glsnumberformat}{6}
+\glossaryentry{MapBase?\glossentry{MapBase}|setentrycounter[]{page}\glsnumberformat}{6}
+\glossaryentry{MapsManager?\glossentry{MapsManager}!Maps?\subglossentry{1}{Maps}|setentrycounter[]{page}\glsnumberformat}{7}
+\glossaryentry{MapBase?\glossentry{MapBase}|setentrycounter[]{page}\glsnumberformat}{7}
+\glossaryentry{Dimension identifiers?\glossentry{dimsidentifier}!time?\subglossentry{1}{time}|setentrycounter[]{page}\glsnumberformat}{7}
+\glossaryentry{Dimension identifiers?\glossentry{dimsidentifier}!level?\subglossentry{1}{level}|setentrycounter[]{page}\glsnumberformat}{7}
+\glossaryentry{Dimension identifiers?\glossentry{dimsidentifier}!name?\subglossentry{1}{name}|setentrycounter[]{page}\glsnumberformat}{7}
+\glossaryentry{Dimension identifiers?\glossentry{dimsidentifier}!time?\subglossentry{1}{time}|setentrycounter[]{page}\glsnumberformat}{7}
+\glossaryentry{Dimension identifiers?\glossentry{dimsidentifier}!level?\subglossentry{1}{level}|setentrycounter[]{page}\glsnumberformat}{7}
+\glossaryentry{MapBase?\glossentry{MapBase}|setentrycounter[]{page}\glsnumberformat}{7}
+\glossaryentry{Dimension identifiers?\glossentry{dimsidentifier}!time?\subglossentry{1}{time}|setentrycounter[]{page}\glsnumberformat}{7}
+\glossaryentry{MapBase?\glossentry{MapBase}|setentrycounter[]{page}\glsnumberformat}{7}
+\glossaryentry{Dimension identifiers?\glossentry{dimsidentifier}!level?\subglossentry{1}{level}|setentrycounter[]{page}\glsnumberformat}{7}
+\glossaryentry{MapBase?\glossentry{MapBase}|setentrycounter[]{page}\glsnumberformat}{7}
+\glossaryentry{Dimension identifiers?\glossentry{dimsidentifier}!name?\subglossentry{1}{name}|setentrycounter[]{page}\glsnumberformat}{7}
+\glossaryentry{Dimension identifiers?\glossentry{dimsidentifier}!var?\subglossentry{1}{var}|setentrycounter[]{page}\glsnumberformat}{7}
+\glossaryentry{Dimension identifiers?\glossentry{dimsidentifier}!time?\subglossentry{1}{time}|setentrycounter[]{page}\glsnumberformat}{7}
+\glossaryentry{Dimension identifiers?\glossentry{dimsidentifier}!level?\subglossentry{1}{level}|setentrycounter[]{page}\glsnumberformat}{7}
+\glossaryentry{MapBase?\glossentry{MapBase}|setentrycounter[]{page}\glsnumberformat}{7}
+\glossaryentry{Dimension identifiers?\glossentry{dimsidentifier}!name?\subglossentry{1}{name}|setentrycounter[]{page}\glsnumberformat}{7}
+\glossaryentry{MapBase?\glossentry{MapBase}|setentrycounter[]{page}\glsnumberformat}{7}
+\glossaryentry{Dimension identifiers?\glossentry{dimsidentifier}!time?\subglossentry{1}{time}|setentrycounter[]{page}\glsnumberformat}{7}
+\glossaryentry{Dimension identifiers?\glossentry{dimsidentifier}!var?\subglossentry{1}{var}|setentrycounter[]{page}\glsnumberformat}{7}
+\glossaryentry{Dimension identifiers?\glossentry{dimsidentifier}!var?\subglossentry{1}{var}|setentrycounter[]{page}\glsnumberformat}{7}
+\glossaryentry{Dimension identifiers?\glossentry{dimsidentifier}!time?\subglossentry{1}{time}|setentrycounter[]{page}\glsnumberformat}{7}
+\glossaryentry{Dimension identifiers?\glossentry{dimsidentifier}!var?\subglossentry{1}{var}|setentrycounter[]{page}\glsnumberformat}{7}
+\glossaryentry{Dimension identifiers?\glossentry{dimsidentifier}!time?\subglossentry{1}{time}|setentrycounter[]{page}\glsnumberformat}{7}
+\glossaryentry{MapsManager?\glossentry{MapsManager}!Maps?\subglossentry{1}{Maps}|setentrycounter[]{page}\glsnumberformat}{8}
+\glossaryentry{MapsManager?\glossentry{MapsManager}!Maps?\subglossentry{1}{Maps}!output?\subglossentry{2}{Maps.output}|setentrycounter[]{page}\glsnumberformat}{8}
+\glossaryentry{MapsManager?\glossentry{MapsManager}!Maps?\subglossentry{1}{Maps}!make\_movie?\subglossentry{2}{Maps.make_movie}|setentrycounter[]{page}\glsnumberformat}{8}
+\glossaryentry{MapBase?\glossentry{MapBase}|setentrycounter[]{page}\glsnumberformat}{8}
+\glossaryentry{MapsManager?\glossentry{MapsManager}!Maps?\subglossentry{1}{Maps}!save?\subglossentry{2}{Maps.save}|setentrycounter[]{page}\glsnumberformat}{8}
+\glossaryentry{MapsManager?\glossentry{MapsManager}!Maps?\subglossentry{1}{Maps}|setentrycounter[]{page}\glsnumberformat}{8}
+\glossaryentry{MapBase?\glossentry{MapBase}|setentrycounter[]{page}\glsnumberformat}{8}
+\glossaryentry{LinePlot?\glossentry{LinePlot}|setentrycounter[]{page}\glsnumberformat}{8}
+\glossaryentry{formatoption?\glossentry{fmt}|setentrycounter[]{page}\glsnumberformat}{8}
+\glossaryentry{nc2map?\glossentry{nc2map}!load?\subglossentry{1}{nc2map.load}|setentrycounter[]{page}\glsnumberformat}{8}
+\glossaryentry{MapsManager?\glossentry{MapsManager}!Maps?\subglossentry{1}{Maps}|setentrycounter[]{page}\glsnumberformat}{8}
+\glossaryentry{show\_colormaps?\glossentry{show_colormaps}|setentrycounter[]{page}\glsnumberformat}{8}
+\glossaryentry{nc2map?\glossentry{nc2map}|setentrycounter[]{page}\glsnumberformat}{8}
+\glossaryentry{formatoption?\glossentry{fmt}!show\_fmtkeys?\subglossentry{1}{show_fmtkeys}|setentrycounter[]{page}\glsnumberformat}{8}
+\glossaryentry{formatoption?\glossentry{fmt}|setentrycounter[]{page}\glsnumberformat}{8}
+\glossaryentry{formatoption?\glossentry{fmt}!show\_fmtdocs?\subglossentry{1}{show_fmtdocs}|setentrycounter[]{page}\glsnumberformat}{8}
+\glossaryentry{formatoption?\glossentry{fmt}|setentrycounter[]{page}\glsnumberformat}{8}
+\glossaryentry{formatoption?\glossentry{fmt}!get\_fmtkeys?\subglossentry{1}{get_fmtkeys}|setentrycounter[]{page}\glsnumberformat}{8}
+\glossaryentry{formatoption?\glossentry{fmt}|setentrycounter[]{page}\glsnumberformat}{8}
+\glossaryentry{formatoption?\glossentry{fmt}!get\_fmtdocs?\subglossentry{1}{get_fmtdocs}|setentrycounter[]{page}\glsnumberformat}{8}
+\glossaryentry{formatoption?\glossentry{fmt}|setentrycounter[]{page}\glsnumberformat}{8}
+\glossaryentry{get\_fnames?\glossentry{nc2map.get_fnames}|setentrycounter[]{page}\glsnumberformat}{8}
+\glossaryentry{shp\_utils?\glossentry{shp_utils}|setentrycounter[]{page}\glsnumberformat}{8}
+\glossaryentry{get\_unique\_vals?\glossentry{nc2map.get_unique_vals}|setentrycounter[]{page}\glsnumberformat}{8}
+\glossaryentry{shp\_utils?\glossentry{shp_utils}|setentrycounter[]{page}\glsnumberformat}{8}
+\glossaryentry{nc2map?\glossentry{nc2map}|setentrycounter[]{page}\glsnumberformat}{8}
+\glossaryentry{Dimension identifiers?\glossentry{dimsidentifier}!var?\subglossentry{1}{var}|setentrycounter[]{page}\glsnumberformat}{9}
+\glossaryentry{Dimension identifiers?\glossentry{dimsidentifier}!time?\subglossentry{1}{time}|setentrycounter[]{page}\glsnumberformat}{9}
+\glossaryentry{Dimension identifiers?\glossentry{dimsidentifier}!level?\subglossentry{1}{level}|setentrycounter[]{page}\glsnumberformat}{9}
+\glossaryentry{Dimension identifiers?\glossentry{dimsidentifier}!name?\subglossentry{1}{name}|setentrycounter[]{page}\glsnumberformat}{9}
+\glossaryentry{MapBase?\glossentry{MapBase}|setentrycounter[]{page}\glsnumberformat}{9}
+\glossaryentry{MapBase?\glossentry{MapBase}!meta?\subglossentry{1}{MapBase.meta}|setentrycounter[]{page}\glsnumberformat}{9}
+\glossaryentry{MapBase?\glossentry{MapBase}|setentrycounter[]{page}\glsnumberformat}{9}
+\glossaryentry{MapsManager?\glossentry{MapsManager}!get\_label\_dict?\subglossentry{1}{MapsManager.get_label_dict}|setentrycounter[]{page}\glsnumberformat}{9}
+\glossaryentry{MapsManager?\glossentry{MapsManager}!Maps?\subglossentry{1}{Maps}|setentrycounter[]{page}\glsnumberformat}{9}
+\glossaryentry{MapsManager?\glossentry{MapsManager}!meta?\subglossentry{1}{MapsManager.meta}|setentrycounter[]{page}\glsnumberformat}{9}
+\glossaryentry{Dimension identifiers?\glossentry{dimsidentifier}!time?\subglossentry{1}{time}|setentrycounter[]{page}\glsnumberformat}{9}
+\glossaryentry{nc2map?\glossentry{nc2map}|setentrycounter[]{page}\glsnumberformat}{9}
+\glossaryentry{MapBase?\glossentry{MapBase}|setentrycounter[]{page}\glsnumberformat}{9}
+\glossaryentry{MapBase?\glossentry{MapBase}|setentrycounter[]{page}\glsnumberformat}{9}
+\glossaryentry{MapBase?\glossentry{MapBase}|setentrycounter[]{page}\glsnumberformat}{10}
+\glossaryentry{nc2map?\glossentry{nc2map}|setentrycounter[]{page}\glsnumberformat}{11}
+\glossaryentry{reader?\glossentry{reader}|setentrycounter[]{page}\glsnumberformat}{11}
+\glossaryentry{MapsManager?\glossentry{MapsManager}!Maps?\subglossentry{1}{Maps}|setentrycounter[]{page}\glsnumberformat}{11}
+\glossaryentry{reader?\glossentry{reader}|setentrycounter[]{page}\glsnumberformat}{11}
+\glossaryentry{nc2map?\glossentry{nc2map}|setentrycounter[]{page}\glsnumberformat}{12}
+\glossaryentry{MapsManager?\glossentry{MapsManager}!Maps?\subglossentry{1}{Maps}!update?\subglossentry{2}{Maps.update}|setentrycounter[]{page}\glsnumberformat}{12}
+\glossaryentry{MapsManager?\glossentry{MapsManager}!Maps?\subglossentry{1}{Maps}!update?\subglossentry{2}{Maps.update}|setentrycounter[]{page}\glsnumberformat}{12}
+\glossaryentry{MapBase?\glossentry{MapBase}|setentrycounter[]{page}\glsnumberformat}{12}
+\glossaryentry{MapBase?\glossentry{MapBase}|setentrycounter[]{page}\glsnumberformat}{12}
+\glossaryentry{MapBase?\glossentry{MapBase}|setentrycounter[]{page}\glsnumberformat}{12}
+\glossaryentry{formatoption?\glossentry{fmt}|setentrycounter[]{page}\glsnumberformat}{13}
+\glossaryentry{formatoption?\glossentry{fmt}|setentrycounter[]{page}\glsnumberformat}{13}
+\glossaryentry{formatoption?\glossentry{fmt}|setentrycounter[]{page}\glsnumberformat}{13}
+\glossaryentry{MapsManager?\glossentry{MapsManager}!Maps?\subglossentry{1}{Maps}|setentrycounter[]{page}\glsnumberformat}{13}
+\glossaryentry{MapsManager?\glossentry{MapsManager}!Maps?\subglossentry{1}{Maps}!update?\subglossentry{2}{Maps.update}|setentrycounter[]{page}\glsnumberformat}{13}
+\glossaryentry{MapBase?\glossentry{MapBase}!FieldPlot?\subglossentry{1}{FieldPlot}|setentrycounter[]{page}\glsnumberformat}{13}
+\glossaryentry{MapBase?\glossentry{MapBase}!WindPlot?\subglossentry{1}{WindPlot}|setentrycounter[]{page}\glsnumberformat}{13}
+\glossaryentry{LinePlot?\glossentry{LinePlot}|setentrycounter[]{page}\glsnumberformat}{13}
+\glossaryentry{nc2map?\glossentry{nc2map}|setentrycounter[]{page}\glsnumberformat}{13}
+\glossaryentry{formatoption?\glossentry{fmt}|setentrycounter[]{page}\glsnumberformat}{13}
+\glossaryentry{formatoption?\glossentry{fmt}!show\_fmtkeys?\subglossentry{1}{show_fmtkeys}|setentrycounter[]{page}\glsnumberformat}{13}
+\glossaryentry{formatoption?\glossentry{fmt}!show\_fmtdocs?\subglossentry{1}{show_fmtdocs}|setentrycounter[]{page}\glsnumberformat}{13}
+\glossaryentry{MapsManager?\glossentry{MapsManager}!Maps?\subglossentry{1}{Maps}!update?\subglossentry{2}{Maps.update}|setentrycounter[]{page}\glsnumberformat}{13}
+\glossaryentry{formatoption?\glossentry{fmt}|setentrycounter[]{page}\glsnumberformat}{13}
+\glossaryentry{formatoption?\glossentry{fmt}!show\_fmtkeys?\subglossentry{1}{show_fmtkeys}|setentrycounter[]{page}\glsnumberformat}{13}
+\glossaryentry{nc2map?\glossentry{nc2map}|setentrycounter[]{page}\glsnumberformat}{25}
+\glossaryentry{reader?\glossentry{reader}|setentrycounter[]{page}\glsnumberformat}{25}
+\glossaryentry{MapBase?\glossentry{MapBase}|setentrycounter[]{page}\glsnumberformat}{25}
+\glossaryentry{reader?\glossentry{reader}|setentrycounter[]{page}\glsnumberformat}{25}
+\glossaryentry{MapsManager?\glossentry{MapsManager}!Maps?\subglossentry{1}{Maps}|setentrycounter[]{page}\glsnumberformat}{25}
+\glossaryentry{nc2map?\glossentry{nc2map}|setentrycounter[]{page}\glsnumberformat}{25}
+\glossaryentry{reader?\glossentry{reader}!NCReader?\subglossentry{1}{NCReader}|setentrycounter[]{page}\glsnumberformat}{25}
+\glossaryentry{reader?\glossentry{reader}!MFNCReader?\subglossentry{1}{MFNCReader}|setentrycounter[]{page}\glsnumberformat}{25}
+\glossaryentry{reader?\glossentry{reader}|setentrycounter[]{page}\glsnumberformat}{25}
+\glossaryentry{reader?\glossentry{reader}!get\_data?\subglossentry{1}{reader.get_data}|setentrycounter[]{page}\glsnumberformat}{25}
+\glossaryentry{MapBase?\glossentry{MapBase}|setentrycounter[]{page}\glsnumberformat}{25}
+\glossaryentry{MapsManager?\glossentry{MapsManager}!Maps?\subglossentry{1}{Maps}|setentrycounter[]{page}\glsnumberformat}{25}
+\glossaryentry{MapBase?\glossentry{MapBase}|setentrycounter[]{page}\glsnumberformat}{25}
+\glossaryentry{MapsManager?\glossentry{MapsManager}!get\_maps?\subglossentry{1}{MapsManager.get_maps}|setentrycounter[]{page}\glsnumberformat}{25}
+\glossaryentry{MapsManager?\glossentry{MapsManager}!Maps?\subglossentry{1}{Maps}|setentrycounter[]{page}\glsnumberformat}{25}
+\glossaryentry{MapBase?\glossentry{MapBase}|setentrycounter[]{page}\glsnumberformat}{25}
+\glossaryentry{MapBase?\glossentry{MapBase}!MapBase.get\_data?\subglossentry{1}{MapBase.get_data}|setentrycounter[]{page}\glsnumberformat}{25}
+\glossaryentry{MapBase?\glossentry{MapBase}!FieldPlot?\subglossentry{1}{FieldPlot}!data?\subglossentry{2}{FieldPlot.data}|setentrycounter[]{page}\glsnumberformat}{25}
+\glossaryentry{Dimension identifiers?\glossentry{dimsidentifier}!time?\subglossentry{1}{time}|setentrycounter[]{page}\glsnumberformat}{25}
+\glossaryentry{Dimension identifiers?\glossentry{dimsidentifier}!level?\subglossentry{1}{level}|setentrycounter[]{page}\glsnumberformat}{25}
+\glossaryentry{reader?\glossentry{reader}|setentrycounter[]{page}\glsnumberformat}{25}
+\glossaryentry{MapBase?\glossentry{MapBase}|setentrycounter[]{page}\glsnumberformat}{25}
+\glossaryentry{DataField?\glossentry{DataField}|setentrycounter[]{page}\glsnumberformat}{25}
+\glossaryentry{DataField?\glossentry{DataField}|setentrycounter[]{page}\glsnumberformat}{26}
+\glossaryentry{MapBase?\glossentry{MapBase}|setentrycounter[]{page}\glsnumberformat}{26}
+\glossaryentry{MapBase?\glossentry{MapBase}|setentrycounter[]{page}\glsnumberformat}{26}
+\glossaryentry{MapBase?\glossentry{MapBase}!WindPlot?\subglossentry{1}{WindPlot}|setentrycounter[]{page}\glsnumberformat}{26}
+\glossaryentry{CDOs?\glossentry{cdo}|setentrycounter[]{page}\glsnumberformat}{26}
+\glossaryentry{DataField?\glossentry{DataField}|setentrycounter[]{page}\glsnumberformat}{26}
+\glossaryentry{nc2map?\glossentry{nc2map}|setentrycounter[]{page}\glsnumberformat}{27}
+\glossaryentry{CDOs?\glossentry{cdo}|setentrycounter[]{page}\glsnumberformat}{27}
+\glossaryentry{CDOs?\glossentry{cdo}|setentrycounter[]{page}\glsnumberformat}{27}
+\glossaryentry{MapsManager?\glossentry{MapsManager}!Maps?\subglossentry{1}{Maps}|setentrycounter[]{page}\glsnumberformat}{27}
+\glossaryentry{MapsManager?\glossentry{MapsManager}!Maps?\subglossentry{1}{Maps}|setentrycounter[]{page}\glsnumberformat}{27}
+\glossaryentry{MapBase?\glossentry{MapBase}!FieldPlot?\subglossentry{1}{FieldPlot}|setentrycounter[]{page}\glsnumberformat}{27}
+\glossaryentry{MapBase?\glossentry{MapBase}!FieldPlot?\subglossentry{1}{FieldPlot}|setentrycounter[]{page}\glsnumberformat}{27}
+\glossaryentry{LinePlot?\glossentry{LinePlot}|setentrycounter[]{page}\glsnumberformat}{27}
+\glossaryentry{LinePlot?\glossentry{LinePlot}|setentrycounter[]{page}\glsnumberformat}{27}
+\glossaryentry{reader?\glossentry{reader}!get\_data?\subglossentry{1}{reader.get_data}|setentrycounter[]{page}\glsnumberformat}{27}
+\glossaryentry{DataField?\glossentry{DataField}|setentrycounter[]{page}\glsnumberformat}{27}
+\glossaryentry{MapBase?\glossentry{MapBase}|setentrycounter[]{page}\glsnumberformat}{27}
+\glossaryentry{reader?\glossentry{reader}|setentrycounter[]{page}\glsnumberformat}{27}
+\glossaryentry{MapBase?\glossentry{MapBase}|setentrycounter[]{page}\glsnumberformat}{27}
+\glossaryentry{reader?\glossentry{reader}|setentrycounter[]{page}\glsnumberformat}{28}
+\glossaryentry{MapBase?\glossentry{MapBase}|setentrycounter[]{page}\glsnumberformat}{28}
+\glossaryentry{MapBase?\glossentry{MapBase}|setentrycounter[]{page}\glsnumberformat}{28}
+\glossaryentry{reader?\glossentry{reader}|setentrycounter[]{page}\glsnumberformat}{28}
+\glossaryentry{MapBase?\glossentry{MapBase}|setentrycounter[]{page}\glsnumberformat}{28}
+\glossaryentry{reader?\glossentry{reader}|setentrycounter[]{page}\glsnumberformat}{28}
+\glossaryentry{MapBase?\glossentry{MapBase}|setentrycounter[]{page}\glsnumberformat}{28}
+\glossaryentry{reader?\glossentry{reader}|setentrycounter[]{page}\glsnumberformat}{28}
+\glossaryentry{Dimension identifiers?\glossentry{dimsidentifier}!time?\subglossentry{1}{time}|setentrycounter[]{page}\glsnumberformat}{28}
+\glossaryentry{reader?\glossentry{reader}|setentrycounter[]{page}\glsnumberformat}{28}
+\glossaryentry{reader?\glossentry{reader}|setentrycounter[]{page}\glsnumberformat}{28}
+\glossaryentry{reader?\glossentry{reader}|setentrycounter[]{page}\glsnumberformat}{28}
+\glossaryentry{reader?\glossentry{reader}|setentrycounter[]{page}\glsnumberformat}{28}
+\glossaryentry{reader?\glossentry{reader}|setentrycounter[]{page}\glsnumberformat}{28}
+\glossaryentry{MapBase?\glossentry{MapBase}|setentrycounter[]{page}\glsnumberformat}{28}
+\glossaryentry{evaluator?\glossentry{evaluator}!FldMeanEvaluator?\subglossentry{1}{FldMeanEvaluator}|setentrycounter[]{page}\glsnumberformat}{28}
+\glossaryentry{evaluator?\glossentry{evaluator}!ViolinEvaluator?\subglossentry{1}{ViolinEvaluator}|setentrycounter[]{page}\glsnumberformat}{28}
+\glossaryentry{MapsManager?\glossentry{MapsManager}!Maps?\subglossentry{1}{Maps}!evaluate?\subglossentry{2}{Maps.evaluate}|setentrycounter[]{page}\glsnumberformat}{28}
+\glossaryentry{MapsManager?\glossentry{MapsManager}!Maps?\subglossentry{1}{Maps}|setentrycounter[]{page}\glsnumberformat}{28}
+\glossaryentry{formatoption?\glossentry{fmt}|setentrycounter[]{page}\glsnumberformat}{28}
+\glossaryentry{MapBase?\glossentry{MapBase}!FieldPlot?\subglossentry{1}{FieldPlot}|setentrycounter[]{page}\glsnumberformat}{28}
+\glossaryentry{MapBase?\glossentry{MapBase}!FieldPlot?\subglossentry{1}{FieldPlot}|setentrycounter[]{page}\glsnumberformat}{28}
+\glossaryentry{MapBase?\glossentry{MapBase}!WindPlot?\subglossentry{1}{WindPlot}|setentrycounter[]{page}\glsnumberformat}{28}
+\glossaryentry{MapBase?\glossentry{MapBase}!WindPlot?\subglossentry{1}{WindPlot}|setentrycounter[]{page}\glsnumberformat}{28}
+\glossaryentry{nc2map?\glossentry{nc2map}|setentrycounter[]{page}\glsnumberformat}{29}
+\glossaryentry{reader?\glossentry{reader}!get\_data?\subglossentry{1}{reader.get_data}|setentrycounter[]{page}\glsnumberformat}{29}
+\glossaryentry{MapBase?\glossentry{MapBase}|setentrycounter[]{page}\glsnumberformat}{29}
+\glossaryentry{MapBase?\glossentry{MapBase}|setentrycounter[]{page}\glsnumberformat}{29}
+\glossaryentry{MapsManager?\glossentry{MapsManager}!Maps?\subglossentry{1}{Maps}!evaluate?\subglossentry{2}{Maps.evaluate}|setentrycounter[]{page}\glsnumberformat}{29}
+\glossaryentry{reader?\glossentry{reader}!ArrayReader?\subglossentry{1}{ArrayReader}|setentrycounter[]{page}\glsnumberformat}{29}
+\glossaryentry{LinePlot?\glossentry{LinePlot}|setentrycounter[]{page}\glsnumberformat}{29}
+\glossaryentry{MapsManager?\glossentry{MapsManager}!Maps?\subglossentry{1}{Maps}!evaluate?\subglossentry{2}{Maps.evaluate}|setentrycounter[]{page}\glsnumberformat}{29}
+\glossaryentry{ViolinPlot?\glossentry{ViolinPlot}|setentrycounter[]{page}\glsnumberformat}{29}
+\glossaryentry{MapsManager?\glossentry{MapsManager}!Maps?\subglossentry{1}{Maps}!evaluate?\subglossentry{2}{Maps.evaluate}|setentrycounter[]{page}\glsnumberformat}{29}
+\glossaryentry{ViolinPlot?\glossentry{ViolinPlot}|setentrycounter[]{page}\glsnumberformat}{29}
+\glossaryentry{formatoption?\glossentry{fmt}!show\_fmtdocs?\subglossentry{1}{show_fmtdocs}|setentrycounter[]{page}\glsnumberformat}{29}
+\glossaryentry{formatoption?\glossentry{fmt}!show\_fmtdocs?\subglossentry{1}{show_fmtdocs}|setentrycounter[]{page}\glsnumberformat}{29}
+\glossaryentry{formatoption?\glossentry{fmt}!show\_fmtkeys?\subglossentry{1}{show_fmtkeys}|setentrycounter[]{page}\glsnumberformat}{30}
+\glossaryentry{formatoption?\glossentry{fmt}!show\_fmtkeys?\subglossentry{1}{show_fmtkeys}|setentrycounter[]{page}\glsnumberformat}{30}
+\glossaryentry{formatoption?\glossentry{fmt}|setentrycounter[]{page}\glsnumberformat}{30}
+\glossaryentry{formatoption?\glossentry{fmt}!get\_fmtdocs?\subglossentry{1}{get_fmtdocs}|setentrycounter[]{page}\glsnumberformat}{30}
+\glossaryentry{formatoption?\glossentry{fmt}|setentrycounter[]{page}\glsnumberformat}{30}
+\glossaryentry{formatoption?\glossentry{fmt}!get\_fmtkeys?\subglossentry{1}{get_fmtkeys}|setentrycounter[]{page}\glsnumberformat}{30}
+\glossaryentry{get\_unique\_vals?\glossentry{nc2map.get_unique_vals}|setentrycounter[]{page}\glsnumberformat}{30}
+\glossaryentry{get\_fnames?\glossentry{nc2map.get_fnames}|setentrycounter[]{page}\glsnumberformat}{30}
+\glossaryentry{DataField?\glossentry{DataField}|setentrycounter[]{page}\glsnumberformat}{30}
+\glossaryentry{MapBase?\glossentry{MapBase}|setentrycounter[]{page}\glsnumberformat}{30}
+\glossaryentry{LinePlot?\glossentry{LinePlot}|setentrycounter[]{page}\glsnumberformat}{30}
+\glossaryentry{reader?\glossentry{reader}!get\_data?\subglossentry{1}{reader.get_data}|setentrycounter[]{page}\glsnumberformat}{30}
+\glossaryentry{MapBase?\glossentry{MapBase}|setentrycounter[]{page}\glsnumberformat}{30}
+\glossaryentry{MapBase?\glossentry{MapBase}|setentrycounter[]{page}\glsnumberformat}{30}
+\glossaryentry{MapsManager?\glossentry{MapsManager}|setentrycounter[]{page}\glsnumberformat}{30}
+\glossaryentry{MapsManager?\glossentry{MapsManager}!Maps?\subglossentry{1}{Maps}|setentrycounter[]{page}\glsnumberformat}{30}
+\glossaryentry{MapsManager?\glossentry{MapsManager}|setentrycounter[]{page}\glsnumberformat}{30}
+\glossaryentry{MapsManager?\glossentry{MapsManager}!Maps?\subglossentry{1}{Maps}|setentrycounter[]{page}\glsnumberformat}{30}
+\glossaryentry{MapBase?\glossentry{MapBase}|setentrycounter[]{page}\glsnumberformat}{30}
+\glossaryentry{MapsManager?\glossentry{MapsManager}!meta?\subglossentry{1}{MapsManager.meta}|setentrycounter[]{page}\glsnumberformat}{30}
+\glossaryentry{MapBase?\glossentry{MapBase}!meta?\subglossentry{1}{MapBase.meta}|setentrycounter[]{page}\glsnumberformat}{30}
+\glossaryentry{MapBase?\glossentry{MapBase}|setentrycounter[]{page}\glsnumberformat}{30}
+\glossaryentry{Dimension identifiers?\glossentry{dimsidentifier}|setentrycounter[]{page}\glsnumberformat}{30}
+\glossaryentry{nc2map?\glossentry{nc2map}|setentrycounter[]{page}\glsnumberformat}{30}
+\glossaryentry{MapBase?\glossentry{MapBase}|setentrycounter[]{page}\glsnumberformat}{30}
+\glossaryentry{MapBase?\glossentry{MapBase}|setentrycounter[]{page}\glsnumberformat}{31}
+\glossaryentry{evaluator?\glossentry{evaluator}!FldMeanEvaluator?\subglossentry{1}{FldMeanEvaluator}|setentrycounter[]{page}\glsnumberformat}{31}
+\glossaryentry{evaluator?\glossentry{evaluator}!ViolinEvaluator?\subglossentry{1}{ViolinEvaluator}|setentrycounter[]{page}\glsnumberformat}{31}
+\glossaryentry{MapsManager?\glossentry{MapsManager}!Maps?\subglossentry{1}{Maps}|setentrycounter[]{page}\glsnumberformat}{31}
+\glossaryentry{MapBase?\glossentry{MapBase}|setentrycounter[]{page}\glsnumberformat}{31}
+\glossaryentry{MapBase?\glossentry{MapBase}|setentrycounter[]{page}\glsnumberformat}{31}
+\glossaryentry{Dimension identifiers?\glossentry{dimsidentifier}|setentrycounter[]{page}\glsnumberformat}{31}
+\glossaryentry{MapsManager?\glossentry{MapsManager}!Maps?\subglossentry{1}{Maps}!output?\subglossentry{2}{Maps.output}|setentrycounter[]{page}\glsnumberformat}{31}
+\glossaryentry{MapsManager?\glossentry{MapsManager}!Maps?\subglossentry{1}{Maps}|setentrycounter[]{page}\glsnumberformat}{31}
+\glossaryentry{MapsManager?\glossentry{MapsManager}!Maps?\subglossentry{1}{Maps}!prevt?\subglossentry{2}{Maps.prevt}|setentrycounter[]{page}\glsnumberformat}{31}
+\glossaryentry{MapsManager?\glossentry{MapsManager}!Maps?\subglossentry{1}{Maps}|setentrycounter[]{page}\glsnumberformat}{31}
+\glossaryentry{MapBase?\glossentry{MapBase}|setentrycounter[]{page}\glsnumberformat}{31}
+\glossaryentry{MapBase?\glossentry{MapBase}|setentrycounter[]{page}\glsnumberformat}{31}
+\glossaryentry{Dimension identifiers?\glossentry{dimsidentifier}|setentrycounter[]{page}\glsnumberformat}{31}
+\glossaryentry{MapsManager?\glossentry{MapsManager}!Maps?\subglossentry{1}{Maps}!make\_movie?\subglossentry{2}{Maps.make_movie}|setentrycounter[]{page}\glsnumberformat}{31}
+\glossaryentry{MapsManager?\glossentry{MapsManager}!Maps?\subglossentry{1}{Maps}|setentrycounter[]{page}\glsnumberformat}{31}
+\glossaryentry{MapsManager?\glossentry{MapsManager}!Maps?\subglossentry{1}{Maps}!nextt?\subglossentry{2}{Maps.nextt}|setentrycounter[]{page}\glsnumberformat}{31}
+\glossaryentry{MapsManager?\glossentry{MapsManager}!Maps?\subglossentry{1}{Maps}|setentrycounter[]{page}\glsnumberformat}{31}
+\glossaryentry{nc2map?\glossentry{nc2map}!load?\subglossentry{1}{nc2map.load}|setentrycounter[]{page}\glsnumberformat}{31}
+\glossaryentry{MapsManager?\glossentry{MapsManager}!Maps?\subglossentry{1}{Maps}|setentrycounter[]{page}\glsnumberformat}{31}
+\glossaryentry{MapBase?\glossentry{MapBase}|setentrycounter[]{page}\glsnumberformat}{31}
+\glossaryentry{nc2map?\glossentry{nc2map}!load?\subglossentry{1}{nc2map.load}|setentrycounter[]{page}\glsnumberformat}{31}
+\glossaryentry{MapsManager?\glossentry{MapsManager}!Maps?\subglossentry{1}{Maps}|setentrycounter[]{page}\glsnumberformat}{31}
+\glossaryentry{MapBase?\glossentry{MapBase}|setentrycounter[]{page}\glsnumberformat}{31}
+\glossaryentry{MapBase?\glossentry{MapBase}|setentrycounter[]{page}\glsnumberformat}{31}
+\glossaryentry{Dimension identifiers?\glossentry{dimsidentifier}|setentrycounter[]{page}\glsnumberformat}{31}
+\glossaryentry{MapBase?\glossentry{MapBase}|setentrycounter[]{page}\glsnumberformat}{31}
+\glossaryentry{LinePlot?\glossentry{LinePlot}|setentrycounter[]{page}\glsnumberformat}{31}
+\glossaryentry{MapsManager?\glossentry{MapsManager}|setentrycounter[]{page}\glsnumberformat}{31}
+\glossaryentry{MapsManager?\glossentry{MapsManager}!Maps?\subglossentry{1}{Maps}!save?\subglossentry{2}{Maps.save}|setentrycounter[]{page}\glsnumberformat}{31}
+\glossaryentry{MapsManager?\glossentry{MapsManager}!Maps?\subglossentry{1}{Maps}|setentrycounter[]{page}\glsnumberformat}{31}
+\glossaryentry{MapsManager?\glossentry{MapsManager}!Maps?\subglossentry{1}{Maps}!save?\subglossentry{2}{Maps.save}|setentrycounter[]{page}\glsnumberformat}{31}
+\glossaryentry{nc2map?\glossentry{nc2map}|setentrycounter[]{page}\glsnumberformat}{31}
+\glossaryentry{reader?\glossentry{reader}|setentrycounter[]{page}\glsnumberformat}{31}
+\glossaryentry{reader?\glossentry{reader}|setentrycounter[]{page}\glsnumberformat}{31}
+\glossaryentry{reader?\glossentry{reader}!NCReader?\subglossentry{1}{NCReader}|setentrycounter[]{page}\glsnumberformat}{31}
+\glossaryentry{reader?\glossentry{reader}!MFNCReader?\subglossentry{1}{MFNCReader}|setentrycounter[]{page}\glsnumberformat}{31}
+\glossaryentry{reader?\glossentry{reader}|setentrycounter[]{page}\glsnumberformat}{31}
+\glossaryentry{reader?\glossentry{reader}|setentrycounter[]{page}\glsnumberformat}{31}
+\glossaryentry{nc2map?\glossentry{nc2map}|setentrycounter[]{page}\glsnumberformat}{32}
+\glossaryentry{LinePlot?\glossentry{LinePlot}|setentrycounter[]{page}\glsnumberformat}{32}
+\glossaryentry{MapBase?\glossentry{MapBase}|setentrycounter[]{page}\glsnumberformat}{32}
+\glossaryentry{reader?\glossentry{reader}|setentrycounter[]{page}\glsnumberformat}{32}
+\glossaryentry{evaluator?\glossentry{evaluator}!ViolinEvaluator?\subglossentry{1}{ViolinEvaluator}|setentrycounter[]{page}\glsnumberformat}{32}

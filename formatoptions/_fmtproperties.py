@@ -5,7 +5,6 @@ from collections import OrderedDict
 from itertools import starmap, chain
 from _basefmtproperties import BaseFmtProperties
 from ..readers import auto_set_reader
-from ..shp_utils import get_bbox, PolyWriter, NamedTemporaryFiles, get_fnames
 from ..defaults import shapes as default_shapes
 from ..defaults import lonlatboxes
 from ..warning import warn, critical
@@ -37,6 +36,7 @@ def create_shpfile(ifile, ofile=None, dissolve=False, **kwargs):
         if not dissolve and no fields are specified in kwargs, the
         output will be ifile
     """
+    from ..shp_utils import get_fnames, PolyWriter, NamedTemporaryFiles
     fnames = get_fnames(ifile)
     field_kwargs = dict(item for item in kwargs.items() if item[0] in fnames
                         or item[0] == 'exact_matches')
@@ -172,11 +172,12 @@ class FmtProperties(BaseFmtProperties):
 
             except TypeError:
                 try:
+                    from ..shp_utils import get_bbox
                     value.setdefault('ifile', default_shapes['boundaryfile'])
                     value = get_bbox(**value)
                     value = list(
                         chain(*starmap(nround, [value[0::2], value[1::2]])))
-                except AttributeError:
+                except (AttributeError, ImportError):
                    pass
             setattr(self, '_' + x, value)
             # update properties depending on lonlatbox

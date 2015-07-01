@@ -17,12 +17,12 @@ Optional Requirements:
    - seaborn (for violin evaluator)
    - shapely (for lineshapes formatoption keyword)
    - shapefile (for lineshapes formatoption keyword)
-Main class for usage is the Maps object class. A helper function
-for the formatoption keywords is show_fmtkeys, displaying the
-possible formatoption keywords.
-Please look into nc2map/demo (or nc2map.demo) for demonstration scripts.
+
+Main class for usage is the Maps object class. Please look into nc2map/demo
+(or nc2map.demo) for demonstration scripts.
 If you find any bugs, please do not hesitate to contact the authors.
-This is nc2map version 0.0beta, so there might be some bugs.
+This is nc2map version 0.0beta, so there might be some bugs. Furthermore please
+note that there will be significant changes to the API in the near future.
 
 Example usage:
 

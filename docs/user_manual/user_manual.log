@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.1415926-2.5-1.40.14 (TeX Live 2013/Debian) (format=pdflatex 2014.4.22)  11 JUN 2015 03:40
+This is pdfTeX, Version 3.1415926-2.5-1.40.14 (TeX Live 2013/Debian) (format=pdflatex 2014.4.22)  1 JUL 2015 10:20
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -1338,26 +1338,26 @@ LaTeX Font Info:    Font shape `OMS/cmr/bx/n' in size <12> not available
 
 
 ]
-Overfull \hbox (7.60938pt too wide) in paragraph at lines 93--96
+Overfull \hbox (7.60938pt too wide) in paragraph at lines 103--106
 []| []\OT1/cmr/bx/n/12 MapBase.get[]data \OT1/cmr/m/n/12 ([][][][][][][][][][][
 ][][][][][]) Method of [][][][][][][][][][][] (and [][][][][]
  []
 
 
-Overfull \hbox (1.73636pt too wide) in paragraph at lines 104--106
+Overfull \hbox (1.73636pt too wide) in paragraph at lines 114--116
 [][]\OT1/cmr/bx/n/12 MapsManager \OT1/cmr/m/n/12 ([][][][][][][][]) Ba-sic clas
 s that con-trols mul-ti-ple [][][][][][][][][][][] in-stances.
  []
 
 
-Overfull \hbox (1.32483pt too wide) in paragraph at lines 123--127
-\OT1/cmr/m/n/12 to eval-u-a-tors. [][]25[][], [][]26[][], \OT1/cmr/m/it/12 see 
+Overfull \hbox (1.32483pt too wide) in paragraph at lines 134--138
+\OT1/cmr/m/n/12 to eval-u-a-tors. [][]28[][], [][]29[][], \OT1/cmr/m/it/12 see 
 [][][][][][][][][][][][][][][][][][][][][][][] \OT1/cmr/m/n/12 & [][][][][][][]
 [][][][]
  []
 
 [30]
-Overfull \hbox (5.092pt too wide) in paragraph at lines 181--181
+Overfull \hbox (5.092pt too wide) in paragraph at lines 196--196
 []| []\OT1/cmr/bx/n/12 NCReader \OT1/cmr/m/n/12 ([][][][][][][][][][][][]) [][]
 [][][][][][][][][] sub-class based upon the [][][][][]
  []
@@ -1404,10 +1404,10 @@ dist/fonts/type1/public/amsfonts/cm/cmti12.pfb></usr/share/texlive/texmf-dist/f
 onts/type1/public/amsfonts/cm/cmtt10.pfb></usr/share/texlive/texmf-dist/fonts/t
 ype1/public/amsfonts/cm/cmtt12.pfb></usr/share/texlive/texmf-dist/fonts/type1/p
 ublic/amsfonts/latxfont/lcircle1.pfb>
-Output written on user_manual.pdf (36 pages, 873916 bytes).
+Output written on user_manual.pdf (36 pages, 874433 bytes).
 PDF statistics:
- 1552 PDF objects out of 1728 (max. 8388607)
- 1419 compressed objects within 15 object streams
+ 1564 PDF objects out of 1728 (max. 8388607)
+ 1431 compressed objects within 15 object streams
  409 named destinations out of 1000 (max. 500000)
  262 words of extra memory for PDF output out of 10000 (max. 10000000)
 

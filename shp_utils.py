@@ -371,7 +371,7 @@ class PolyWriter(shp.Writer):
           itertools.imap iterator containing the single polygons in shapes
         """
         return imap(lambda part: polyo(part, **kwargs),
-                    self._shape_to_parts(shape))
+                    self._shape_to_parts(shapes))
 
     def dissolve_shapes(self, shapes):
         """Dissolves the given shapes and returns the parts"""

@@ -1152,12 +1152,13 @@ class MapBase(BasePlot):
                 data = self.reader.get_data(datashape='any', **dims)
             data = self._mask_data(
                 data.shift_data(self.mapproj).mask_outside(self.mapproj))
-            lon = reader.lon.data
-            lat = reader.lat.data
-            mapproj = Basemap(llcrnrlon=lon.min(), urcrnrlon=lon.max(),
-                                 llcrnrlat=lat.min(), urcrnrlat=lat.max())
-            # shift back to original settings
-            data.shift_data(mapproj)
+            if not self.reader._udim(self.get_var()):
+                lon = reader.lon.data
+                lat = reader.lat.data
+                mapproj = Basemap(llcrnrlon=lon.min(), urcrnrlon=lon.max(),
+                                    llcrnrlat=lat.min(), urcrnrlat=lat.max())
+                # shift back to original settings
+                data.shift_data(mapproj)
             if single_var:
                 reader.variables[var].data = data[:]
             else:

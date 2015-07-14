@@ -443,8 +443,9 @@ class FieldPlot(MapBase):
             self.logger.debug('    Draw plot')
             if (self.reader._udim(self.get_var())
                     and self.fmt.plottype == 'quad'):
-                warn("Found unstructured variable. I set the 'plottype' "
-                     "keyword to 'tri'", logger=self.logger)
+                self.logger.debug(
+                    "Found unstructured variable. I set the 'plottype' "
+                    "keyword to 'tri'")
                 self.fmt.plottype = 'tri'
             if self.fmt.plottype == 'quad':
                 if self.fmt.grid:

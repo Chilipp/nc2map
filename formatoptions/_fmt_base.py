@@ -103,11 +103,12 @@ class FmtBase(BaseFormatter):
                shapes""" % (default['lonlatbox'], shapes['boundaryfile']))
     proj = props.proj(
         'proj', """
-        string ('cyl', 'robin', 'northpole', 'southpole') or dictionary
-        (Default: %s). Defines the options for the projection used for the
-        plot. If string, Basemap is set up automatically with settings from
-        lonlatbox, if dictionary, these are the keyword arguments passed to
-        mpl_toolkits.basemap.Basemap initialization.""" % default['proj'])
+        string {'cyl', 'robin', 'northpole', 'southpole', 'robin', 'hammer',
+        'ortho', 'geos'} or dictionary (Default: %s). Defines the options for
+        the projection used for the plot. If string, Basemap is set up
+        automatically with settings from lonlatbox, if dictionary, these are
+        the keyword arguments passed to mpl_toolkits.basemap.Basemap
+        initialization.""" % default['proj'])
     lineshapes = props.lineshapes(
         'lineshapes', """
         string, list of strings or dictionary. (Default: %s). Draw polygons on

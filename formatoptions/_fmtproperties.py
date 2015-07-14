@@ -263,7 +263,7 @@ class FmtProperties(BaseFmtProperties):
 
         def setx(self, projection):
             setattr(self, '_' + x, projection)
-            if projection == 'northpole':
+            if projection in ['northpole', 'npstere']:
                 self._defaultrange = [-180., 180., 0., 90]
                 self._box = self.lonlatbox
                 if self._box == self.glob:
@@ -280,7 +280,7 @@ class FmtProperties(BaseFmtProperties):
                 if self.paralabelpos is None:
                     self._paraops['labels'] = [0, 0, 0, 0]
 
-            elif projection == 'southpole':
+            elif projection in ['southpole', 'spstere']:
                 self._defaultrange = [-180., 180., -90., 0.]
                 self._box = self.lonlatbox
                 if self._box == self.glob:
@@ -333,6 +333,8 @@ class FmtProperties(BaseFmtProperties):
             elif projection in ['ortho', 'geos']:
                 self._defaultrange = [0, 180, -90, 90]
                 self._box = self.lonlatbox
+                if self._box == self.glob:
+                    self._box = self._defaultrange
                 self._projops = {  # projection options for basemap
                     'projection': projection, 'lon_0': np.mean(self._box[:2]),
                     'lat_0': np.mean(self._box[2:]),
@@ -346,8 +348,10 @@ class FmtProperties(BaseFmtProperties):
                     self._paraops['labels'] = [0, 0, 0, 0]
 
             elif projection in ['lambert', 'lcc']:
-                self._defaultrange = [0, 180, -90, 90]
+                self._defaultrange = [0, 180, 0, 90]
                 self._box = self.lonlatbox
+                if self._box == self.glob:
+                    self._box = self._defaultrange
                 self._projops = {  # projection options for basemap
                     'projection': 'lcc', 'lon_0': np.mean(self._box[:2]),
                     'lat_0': np.mean(self._box[2:]), 'llcrnrlon': self._box[0],
@@ -364,6 +368,8 @@ class FmtProperties(BaseFmtProperties):
             elif projection in ['cass', 'poly']:
                 self._defaultrange = [0, 85, 0, 90]
                 self._box = self.lonlatbox
+                if self._box == self.glob:
+                    self._box = self._defaultrange
                 self._projops = {  # projection options for basemap
                     'projection': projection, 'lon_0': np.mean(self._box[:2]),
                     'lat_0': np.mean(self._box[2:]), 'llcrnrlon': self._box[0],

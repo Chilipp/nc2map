@@ -8,6 +8,7 @@ Requirements (at least this package is tested with)
    - matplotlib version, 1.3.1
    - mpl_toolkits.basemap, version 1.07
    - netCDF4, version 1.1.3
+   - six
    - Python 2.7
 Main class for usage is the Maps object class. A helper function
 for the formatoption keywords is show_fmtkeys, displaying the

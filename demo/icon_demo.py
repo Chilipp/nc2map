@@ -36,7 +36,7 @@ mymaps.close()  # close the Maps instance
 
 # some additional tips:
 # nc2map.show_fmtkeys()                     # show format option keywords
-# nc2map.show_fmtdocs('lsm')                # show docu for keyword
+# nc2map.show_fmtdocs()                     # show docu for keyword
 # nc2map.show_colormaps()                   # show available colormaps
 # to reverse colormaps: use extend the colormap by '_r',
 # e.g. 'white_blue_red_r' --> red_blue_white'

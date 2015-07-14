@@ -21,9 +21,10 @@ cmapnames = {  # names of self defined colormaps (see get_cmap function below)
     'white_blue_red': [  # temperature
         (1, 1., 1), (0, 0, 1), (0, 1, 1), (1, 1, 0), (1, 0, 0)],
     'white_red_blue': [  # water fluxes
-        (1, 1., 1), (1, 0, 0), (1, 1, 0), (0, 1, 1), (0, 0, 1)]
+        (1, 1., 1), (1, 0, 0), (1, 1, 0), (0, 1, 1), (0, 0, 1)],
     }
-
+for key, val in cmapnames.items():
+    cmapnames[key + '_r'] = val[::-1]
 
 def get_cmap(name, lut=None):
     """Returns the specified colormap. If name is one of

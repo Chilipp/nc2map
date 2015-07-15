@@ -268,7 +268,7 @@ class MetaValue(object):
         return  oct(self.__data)
 
     def __hex__(self):
-        return hex(self.__data
+        return hex(self.__data)
 
     def __index__(self):
         return self.__data.__index__()

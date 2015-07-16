@@ -2,7 +2,7 @@
 from setuptools import setup
 
 setup (name     = 'nc2map',
-    version     = '0.1.0',
+    version     = '0.0.0',
     author      = "Philipp Sommer",
     author_email= "philipp.sommer@studium.uni-hamburg.de",
     license     = "GPLv2",

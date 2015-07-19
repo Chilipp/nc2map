@@ -48,8 +48,16 @@ def show_colormaps(*args, **kwargs):
     and adapted in November 2014.
     *args may be any names as strings of standard colorbars (e.g. 'jet',
     'Greens', etc.) or a colormap instance suitable with pyplot.
-    Keyword arguments may be N: integer (Default: 11). The number of
-    increments in the colormap."""
+    Parameters
+    ----------
+    *args
+        any name as strings of standard colorbars (e.g. 'jet', 'Greens', etc.)
+        or a colormap instance suitable with pyplot
+    N: int, optional
+        Default: 11. The number of increments in the colormap.
+    show: bool, optional
+        Default: True. If True, show the created figure at the end with
+        pyplot.show(block=False)"""
     # This example comes from the Cookbook on www.scipy.org.  According to the
     # history, Andrew Straw did the conversion from an old page, but it is
     # unclear who the original author is."""
@@ -86,7 +94,8 @@ def show_colormaps(*args, **kwargs):
     nmaps = len(maps) + 1
     fig = plt.figure(figsize=(5, 10))
     fig.subplots_adjust(top=0.99, bottom=0.01, left=0.2, right=0.99)
-    N = kwargs.get('N', 11)
+    N = kwargs.pop('N', 11)
+    show = kwargs.pop('show', True)
     for i, m in enumerate(maps):
         ax = plt.subplot(nmaps, 1, i+1)
         plt.axis("off")
@@ -96,4 +105,5 @@ def show_colormaps(*args, **kwargs):
         fig.text(pos[0] - 0.01, pos[1], m, fontsize=10,
                  horizontalalignment='right')
     fig.canvas.set_window_title("Figure %i: Predefined colormaps" % fig.number)
-    plt.show(block=False)
+    if show:
+        plt.show(block=False)

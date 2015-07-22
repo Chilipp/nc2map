@@ -140,7 +140,7 @@ class FmtProperties(BaseFmtProperties):
                 if isinstance(bounds, str):
                     setattr(self, '_' + x, (bounds, 11))
                 else:
-                    setattr(self, '_' + x, np.array(bounds))
+                    setattr(self, '_' + x, bounds)
 
             else:
                 print(

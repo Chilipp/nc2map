@@ -32,6 +32,12 @@ import mpl_toolkits.basemap as bm
 from matplotlib.tri import Triangulation, TriAnalyzer
 from nc_utils import chunk_shape_3D
 from .defaults import readers as defaults
+try:
+    from xray import open_dataset, open_mfdataset
+except ImportError as xray_io_error:
+    def open_dataset(*args, **kwargs):
+        raise ImportError(xray_io_error.message)
+    open_mfdataset = open_dataset
 
 
 defaultnames = defaults['dimnames']
@@ -317,6 +323,13 @@ def datadim(x):
     return property(getx, setx, delx, doc)
 
 
+def _get_dims(obj):
+    try:
+        return obj.dimensions
+    except AttributeError:
+        return obj.dims
+
+
 class GridError(Exception):
     pass
 
@@ -343,7 +356,7 @@ class Variable(object):
     var.meta['long_name'] = 'my long name'
     """
 
-    __slots__ = ['data', 'var', 'dimensions', 'meta']
+    __slots__ = ['data', 'var', 'dimensions', 'meta', 'name']
 
     @property
     def shape(self):
@@ -380,6 +393,7 @@ class Variable(object):
             data = np.asarray(data)
         self.data = data
         self.var = var
+        self.name = var
         self.dimensions = tuple(dims)
         self.meta = OrderedDict(meta).copy()
 
@@ -686,7 +700,7 @@ class DataField(object):
         except TypeError:
             return dim_data
         dims = map(str, frozenset(self.dimensions + dim_data.keys()))
-        data = tuple(dim_data.get(dim) for dim in dims)
+        data = tuple(np.asarray(dim_data.get(dim)) for dim in dims)
         dtypes = [np.asarray(dim_data.get(dim)).dtype for dim in dims]
         shapes = [np.asarray(dim_data.get(dim)).shape for dim in dims]
         dtype = zip(dims, dtypes, shapes)
@@ -1261,9 +1275,10 @@ class ReaderBase(object):
         dimension"""
         return OrderedDict([
             item for item in self.variables.items()
-            if (self._lonnames.intersection(item[1].dimensions)
-                and self._latnames.intersection(item[1].dimensions)
-                and item[0] not in [self.lonnames, self.latnames])])
+            if ((self._lonnames.intersection(_get_dims(item[1])) and
+                 self._latnames.intersection(_get_dims(item[1]))) or
+                self._udim(item[1])) and
+            item[0] not in [self.lonnames, self.latnames]])
 
     @property
     def grid_variables(self):
@@ -1271,7 +1286,7 @@ class ReaderBase(object):
         level. Latitude dimension is stored in lat, longitude in lon, time
         in time and level in level."""
         dimensions = frozenset(chain(*(
-            var.dimensions for var in self.variables.values())))
+            _get_dims(var) for var in self.variables.values())))
         return OrderedDict([
             (var, self.variables.get(var)) for var in dimensions])
 
@@ -1280,14 +1295,14 @@ class ReaderBase(object):
         """Dictionary with variables containing the time dimension"""
         return OrderedDict([
             item for item in self.variables.items()
-            if self.timenames in item[1].dimensions])
+            if self.timenames in _get_dims(item[1])])
 
     @property
     def level_variables(self):
         """Dictionary with variables containing the time dimension"""
         return OrderedDict([
             item for item in self.variables.items()
-            if self.levelnames in item[1].dimensions])
+            if self.levelnames in _get_dims(item[1])])
 
     @property
     def dttime(self):
@@ -1388,15 +1403,15 @@ class ReaderBase(object):
         dict: dictionary with keys being coordinate names, and values the
             variable"""
         if not self._udim(varo):
-            return {item for item in self.grid_variables if item[0] in
-                    varo.dimensions}
+            return {key: val for key, val in self.grid_variables.items()
+                    if key in _get_dims(varo)}
         else:
             for ini in self.ufuncs:
                 self.logger.debug("    Try %s", ini.__class__.__name__)
                 try:
                     coords = ini.get_coords(self, varo)
                     for dim in set(
-                            varo.dimensions).intersection(self.variables):
+                            _get_dims(varo)).intersection(self.variables):
                         coords[dim] = self.variables[dim]
                     return coords
 
@@ -1415,25 +1430,28 @@ class ReaderBase(object):
         units (day as %Y%m%d.%f)"""
         if isinstance(times[0], dt.datetime):
             return times[:]
-        if not hasattr(times, 'units'):
+        meta = self.get_meta(times.name)
+        try:
+            units = meta['units']
+        except KeyError:
             raise ValueError("Could not determine units of time variable")
-        if not hasattr(times, 'calendar'):
+        try:
+            calendar = meta['calendar']
+        except KeyError:
             warn("Could not determine calendar. Hence I assume the 'standard' "
                  "calendar.", Nc2MapRuntimeWarning)
             calendar = 'standard'
-        else:
-            calendar = times.calendar
         try:  # try interpretation of relative time units
             self.logger.debug("Try netCDF4.num2date function")
-            dts = nc.num2date(times[:], units=times.units, calendar=calendar)
+            dts = nc.num2date(times[:], units=units, calendar=calendar)
         except ValueError:  # assume absolute time units
             self.logger.debug("Failed. Test for absolute time...", exc_info=1)
-            if not times.units == 'day as %Y%m%d.%f':
+            if not units == 'day as %Y%m%d.%f':
                 raise ValueError("Could not interprete time units %r" %
-                                 times.units)
+                                 units)
             days = np.floor(times[:]).astype(int)
-            subdays = times[:] - days
-            days = np.array(map(lambda x: "%08i" % x, days))
+            subdays = np.asarray(times[:] - days)
+            days = np.asarray(map(lambda x: "%08i" % x, days))
             dts = np.array(
                 map(lambda x: (dt.datetime.strptime(x[0], "%Y%m%d") +
                                dt.timedelta(days=x[1])),
@@ -1515,8 +1533,8 @@ class ReaderBase(object):
         This method only calculates if varo.units == 'radian'"""
         self.logger.debug("Converting spatial dimension %s" % varo)
         try:
-            units = varo.units
-        except AttributeError:
+            self.get_meta(varo.name)['units']
+        except KeyError:
             if units is None:
                 raise ValueError(
                     "Could not determine units of the spatial variable")
@@ -1544,7 +1562,7 @@ class ReaderBase(object):
 
     def _udim(self, var):
         """Test if the variable is unstructured"""
-        udim = self.udims.intersection(var.dimensions)
+        udim = self.udims.intersection(_get_dims(var))
         udim = None if not udim else list(udim)[0]
         return udim
 
@@ -1694,32 +1712,32 @@ class ReaderBase(object):
                 for var, obj in reader.variables.items():
                     if copy:
                         data[var] = {
-                            'data': obj[:].copy(), 'dims': obj.dimensions[:],
+                            'data': obj[:].copy(), 'dims': _get_dims(obj)[:],
                             'meta': reader.get_meta(var=var).copy()}
                     else:
                         data[var] = {
-                            'data': obj[:], 'dims': obj.dimensions[:],
+                            'data': obj[:], 'dims': _get_dims(obj)[:],
                             'meta': reader.get_meta(var=var)}
         elif not checks['times']:
             stime = self.timenames
             for var, obj in self.variables.items():
                 data[var] = {
-                    'data': obj[:], 'dims': obj.dimensions[:],
+                    'data': obj[:], 'dims': _get_dims(obj)[:],
                     'meta': self.get_meta(var=var).copy()}
             for reader in readers[:-1]:
                 indices = np.searchsorted(self.dttime, reader.dttime,
                                           sorter=np.argsort(self.dttime))
                 for var, obj in self.variables.items():
-                    if stime not in obj.dimensions:
+                    if stime not in _get_dims(obj):
                         continue
                     data[var]['data'] = np.insert(
                         data[var]['data'], indices, obj[:],
-                        axis=list(obj.dimensions).index(reader.timenames))
+                        axis=list(_get_dims(obj)).index(reader.timenames))
         elif not checks['levels']:
             slevel = self.levelnames
             for var, obj in self.variables.items():
                 data[var] = {
-                    'data': obj[:], 'dims': obj.dimensions[:],
+                    'data': obj[:], 'dims': _get_dims(obj)[:],
                     'meta': self.get_meta(var=var).copy()}
             for reader in readers[:-1]:
                 indices = np.searchsorted(self.level[:], reader.level[:])
@@ -1732,11 +1750,11 @@ class ReaderBase(object):
                 else:
                     indices = np.searchsorted(self.level[:], reader.level[:])
                 for var, obj in self.variables.items():
-                    if slevel not in obj.dimensions:
+                    if slevel not in _get_dims(obj):
                         continue
                     data[var]['data'] = np.insert(
                         data[var]['data'], indices, obj[:],
-                        axis=list(obj.dimensions).index(reader.levelnames))
+                        axis=list(_get_dims(obj)).index(reader.levelnames))
         return ArrayReader(
             meta=self.get_meta().copy(),
             timenames=self._timenames, levelnames=self._levelnames,
@@ -1803,7 +1821,7 @@ http://netcdf4-python.googlecode.com/svn/trunk/docs/netCDF4.Variable-class.html
                         fill_value = None
             else:
                 fill_value = missval
-            for i, dim in enumerate(obj.dimensions):
+            for i, dim in enumerate(_get_dims(obj)):
                 if dim not in created_dims:
                     if dim == self.timenames:
                         nco.createDimension(dim, None)
@@ -1812,12 +1830,12 @@ http://netcdf4-python.googlecode.com/svn/trunk/docs/netCDF4.Variable-class.html
                     created_dims.add(dim)
             if clobber is not False:
                 varno = nco.createVariable(
-                    var, obj[:].dtype, obj.dimensions,
+                    var, obj[:].dtype, _get_dims(obj),
                     chunksizes=clobber, fill_value=fill_value, **compression
                     )
             else:
                 varno = nco.createVariable(
-                    var, obj[:].dtype, obj.dimensions,
+                    var, obj[:].dtype, _get_dims(obj),
                     fill_value=fill_value, **compression
                     )
             varno.setncatts(self.get_meta(var=var))
@@ -1879,7 +1897,7 @@ http://netcdf4-python.googlecode.com/svn/trunk/docs/netCDF4.Variable-class.html
                                             shrink=False), copy=True)
 
             # set up grid information for DataField instance
-            vardims = list(self.variables[var].dimensions)
+            vardims = list(_get_dims(self.variables[var]))
 
             # check whether data has the right shape
             if udim:  # unstructered has only one spatial dimension
@@ -1926,10 +1944,10 @@ http://netcdf4-python.googlecode.com/svn/trunk/docs/netCDF4.Variable-class.html
         for key, val in dims.items():
             self.logger.debug("Slice for dimension %s: %s", key, val)
         if var is not None:
-            dimslices = list(self.variables[var].dimensions)
+            dimslices = list(_get_dims(self.variables[var]))
         elif np.all(vlst is not None):
             var = vlst[0]
-            dimslices = list(self.variables[var].dimensions)
+            dimslices = list(_get_dims(self.variables[var]))
         else:
             dimslices = [self.timenames, self.levelnames, self.lonnames,
                          self.latnames]
@@ -2014,17 +2032,17 @@ http://netcdf4-python.googlecode.com/svn/trunk/docs/netCDF4.Variable-class.html
                         "Use the first step for dimension %s. ", dim)
                     dimslices[i] = 0
                     dims[dim] = 0
-        unused_dimensions = [dim for dim in dims if not dim in varo.dimensions]
+        unused_dimensions = [dim for dim in dims if not dim in _get_dims(varo)]
         if unused_dimensions:
             if set(unused_dimensions) - {'time', 'level'}:
                 warn("Did not use slice for dimension %s because not in "
                     "dimension list of variable %s!" % (
-                    ', '.join(unused_dimensions), varo.dimensions))
+                    ', '.join(unused_dimensions), _get_dims(varo)))
             else:
                 self.logger.debug(
                     "Did not use slice for dimension %s because not in "
                     "dimension list of variable %s!",
-                    ', '.join(unused_dimensions), varo.dimensions)
+                    ', '.join(unused_dimensions), _get_dims(varo))
             #for dim in unused_dimensions:
                 #del dims[dim]
 
@@ -2072,7 +2090,7 @@ http://netcdf4-python.googlecode.com/svn/trunk/docs/netCDF4.Variable-class.html
 
             # add unstructured dimension to datakwargs
             if self.udims.isdisjoint(datakwargs):
-                iax = list(varo.dimensions).index(udim)
+                iax = list(_get_dims(varo)).index(udim)
                 datakwargs[udim] = np.array(range(varo.shape[iax]))
 
         if single_var:
@@ -2228,7 +2246,7 @@ http://netcdf4-python.googlecode.com/svn/trunk/docs/netCDF4.Variable-class.html
         ArrayReader instance"""
         data = {}
         for var, obj in self.variables.items():
-            data[var] = {'data': obj[:].copy(), 'dims': obj.dimensions[:],
+            data[var] = {'data': obj[:].copy(), 'dims': _get_dims(obj)[:],
                          'meta': self.get_meta(var=var).copy()}
         reader =  ArrayReader(
             meta=self.get_meta().copy(),
@@ -2266,10 +2284,10 @@ http://netcdf4-python.googlecode.com/svn/trunk/docs/netCDF4.Variable-class.html
             item for item in self.variables.items() if item[0] in dimensions]
         for var, obj in var_items + dim_items:
             if copy:
-                data[var] = {'data': obj[:].copy(), 'dims': obj.dimensions[:],
+                data[var] = {'data': obj[:].copy(), 'dims': _get_dims(obj)[:],
                              'meta': self.get_meta(var=var).copy()}
             else:
-                data[var] = {'data': obj[:], 'dims': obj.dimensions[:],
+                data[var] = {'data': obj[:], 'dims': _get_dims(obj)[:],
                              'meta': self.get_meta(var=var)}
         if copy:
             meta = self.get_meta().copy()
@@ -2290,10 +2308,10 @@ http://netcdf4-python.googlecode.com/svn/trunk/docs/netCDF4.Variable-class.html
         else:
             dims['var'] = var
             var = self.variables[var]
-        vdims = set(var.dimensions) - self._latnames - self._lonnames \
+        vdims = set(_get_dims(var)) - self._latnames - self._lonnames \
             - self.udims
         ndims = len(set(dims) & self._levelnames & self._timenames &
-                    set(var.dimensions))
+                    set(_get_dims(var)))
         if ndims == len(vdims):
             return dims
         # standard names from reader._levelnames, etc.
@@ -2339,7 +2357,7 @@ http://netcdf4-python.googlecode.com/svn/trunk/docs/netCDF4.Variable-class.html
         if var is not None:
             vlst = [var]
         full_vlst = set(vlst + list(chain(*(
-            self.variables[var].dimensions for var in vlst)))).intersection(
+            _get_dims(self.variables[var]) for var in vlst)))).intersection(
                 set(self.variables.keys()))
         reader = self.selname(*full_vlst, copy=True)
         data = reader.get_data(rename_dims=False, var=var,
@@ -2402,13 +2420,12 @@ http://netcdf4-python.googlecode.com/svn/trunk/docs/netCDF4.Variable-class.html
                     dims_gen = product(
                         izip(checks['base_time'], checks['new_time']),
                         izip(checks['base_level'], checks['new_level']))
-                    print base_var, new_var
                     for times, levels in dims_gen:
                         for i, var in enumerate([base.variables[base_var],
                                                  new.variables[new_var]]):
                             obj = base if not i else new
-                            vardims = np.array(var.dimensions)
-                            dimslices[i] = list(var.dimensions)
+                            vardims = np.array(_get_dims(var))
+                            dimslices[i] = list(_get_dims(var))
                             for j, dim in enumerate(dimslices[i]):
                                 if dim == obj.timenames:
                                     dimslices[i][j] = times[i]
@@ -2627,7 +2644,7 @@ http://netcdf4-python.googlecode.com/svn/trunk/docs/netCDF4.Variable-class.html
         strings.append("    variables(dimensions): %s" % (
             ', '.join(
                 "%s %s(%s)" % (item[1][:].dtype, item[0],
-                               ', '.join(item[1].dimensions))
+                               ', '.join(_get_dims(item[1])))
                 for item in self.variables.items())))
         return '\n'.join(strings)
 
@@ -2877,6 +2894,51 @@ class NCReader(ReaderBase):
             raise AttributeError(
                 "'%s' object has no attribute '%s'" % (
                     self.__class__.__name__, attr))
+
+
+class XrayReader(NCReader):
+    nco_base = staticmethod(open_dataset)
+
+    def set_meta(self, var=None, **meta):
+        """Set meta information.
+        Input:
+          - var: string. Variable name. If None, the meta information is
+              regarded as global meta information
+          Keyword arguments (meta) describe the key, value pairs for the
+          meta informations"""
+        if var is not None and var not in self.variables.keys():
+            raise KeyError('Unknown variable %s' % var)
+        if var is None:
+            self.nco.attrs.update(meta)
+        else:
+            self.nco.variables[var].update(meta)
+
+    def get_meta(self, var=None):
+        """Get meta information.
+        Input:
+          - var: string. Variable name. If None, the meta information is
+              regarded as global meta information"""
+        possible_keys = self.variables.keys() + list(self._timenames) + list(
+            self._levelnames) + list(self._lonnames) + list(self._latnames)
+        if var is not None and var not in possible_keys:
+            raise KeyError('Unknown variable %s' % var)
+        if var is None:
+            obj = self
+        elif var in self._lonnames:
+            obj = self.lon
+        elif var in self._latnames:
+            obj = self.lat
+        elif var in self._timenames:
+            obj = self.time
+        elif var in self._levelnames:
+            obj = self.level
+        else:
+            obj = self.variables[var]
+        return OrderedDict(obj.attrs)
+
+
+class MFXrayReader(XrayReader):
+    nco_base = staticmethod(open_mfdataset)
 
 
 class MFNCReader(NCReader):

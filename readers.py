@@ -139,16 +139,18 @@ class Icon_Triangles(object):
                 units = clon.units
             except AttributeError:
                 units = None
-            clon = reader.convert_spatial(clon, units, raise_error=False)
-            clonv = reader.convert_spatial(clonv, units,
-                                           raise_error=False).ravel()
+            clon = reader.convert_spatial(clon, units, raise_error=False,
+                                          vname='clon')
+            clonv = reader.convert_spatial(clonv, units, raise_error=False,
+                                           vname='clon_vertives').ravel()
             try:
                 units = clat.units
             except AttributeError:
                 units = None
-            clat = reader.convert_spatial(clat, units, raise_error=False)
-            clatv = reader.convert_spatial(clatv, units,
-                                           raise_error=False).ravel()
+            clat = reader.convert_spatial(clat, units, raise_error=False,
+                                          vname='clat')
+            clatv = reader.convert_spatial(clatv, units, raise_error=False,
+                                           vname='clat_vertices').ravel()
         else:
             clon = clon[:]
             clat = clat[:]
@@ -204,8 +206,8 @@ class Ugrid_Triangles(object):
         (lonname, lon), (latname, lat), (triname, triangles) = self.test(
             reader, varo)
         if convert_spatial:
-            lon = reader.convert_spatial(lon)
-            lat = reader.convert_spatial(lat)
+            lon = reader.convert_spatial(lon, vname=reader.lonnames)
+            lat = reader.convert_spatial(lat, vname=reader.lonnames)
         return lon[:], lat[:], Triangulation(lon[:], lat[:],
                                             triangles=triangles[:])
 
@@ -1311,7 +1313,7 @@ class ReaderBase(object):
         if time is None:
             raise ValueError("Could not find time variable with name %s" %
                              self._timenames)
-        return self.convert_time(self.time)
+        return self.convert_time(self.time, self.timenames)
 
     def __init__(self, meta={}, timenames=defaultnames['timenames'],
                  levelnames=defaultnames['levelnames'],
@@ -1420,9 +1422,7 @@ class ReaderBase(object):
             raise GridError(
                 "No class could interprete the unstructered grid!")
 
-
-
-    def convert_time(self, times):
+    def convert_time(self, times, tname=None):
         """Converts the time variable instance into array of datetime
         instances.
 
@@ -1430,7 +1430,7 @@ class ReaderBase(object):
         units (day as %Y%m%d.%f)"""
         if isinstance(times[0], dt.datetime):
             return times[:]
-        meta = self.get_meta(times.name)
+        meta = self.get_meta(tname or times.name)
         try:
             units = meta['units']
         except KeyError:
@@ -1508,7 +1508,7 @@ class ReaderBase(object):
         raise GridError(
             "No class could interprete the unstructered grid!")
 
-    def convert_spatial(self, varo, units=None, raise_error=True):
+    def convert_spatial(self, varo, units=None, raise_error=True, vname=None):
         """Converts radians to degrees
 
         Parameters
@@ -1533,7 +1533,7 @@ class ReaderBase(object):
         This method only calculates if varo.units == 'radian'"""
         self.logger.debug("Converting spatial dimension %s" % varo)
         try:
-            self.get_meta(varo.name)['units']
+            self.get_meta(vname or varo.name)['units']
         except KeyError:
             if units is None:
                 raise ValueError(
@@ -2071,12 +2071,13 @@ http://netcdf4-python.googlecode.com/svn/trunk/docs/netCDF4.Variable-class.html
                     continue
             if dim in self._timenames and convert_time:
                 try:
-                    dim_data = self.convert_time(dim_data)
+                    dim_data = self.convert_time(dim_data, dim)
                 except ValueError as e:
                     warn(e.message, logger=self.logger)
             elif (dim in self._lonnames.union(self._latnames)
                   and convert_spatial):
-                dim_data = self.convert_spatial(dim_data, raise_error=False)
+                dim_data = self.convert_spatial(dim_data, raise_error=False,
+                                                vname=dim)
             datakwargs[dim] = dim_data[dimslice]
 
         # consider unstructured data

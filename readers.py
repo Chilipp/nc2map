@@ -41,7 +41,7 @@ except ImportError as xray_io_error:
 
 
 defaultnames = defaults['dimnames']
-readers = ['NCReader', 'MFNCReader', 'ArrayReader']
+readers = ['XrayReader', 'MFXrayReader', 'NCReader', 'MFNCReader', 'ArrayReader']
 
 
 def auto_set_reader(*args, **kwargs):
@@ -2811,12 +2811,13 @@ class NCReader(ReaderBase):
     def _set_grid_file(self, *args, **kwargs):
         """Sets the _grid_file from kwargs['filename'], kwargs['files'][0],
         args[0] and self.filepath()"""
-        try:
+        for key in ['filename', 'files', 'filename_or_obj']:
             try:
                 self._grid_file = kwargs.pop('filename')
+                return
             except KeyError:
-                self._grid_file = kwargs.pop('files')
-        except KeyError:
+                pass
+        try:
             self._grid_file = args[0]
         except IndexError:
             # use netCDF4.Dataset.filepath method
@@ -2897,7 +2898,11 @@ class NCReader(ReaderBase):
 
 
 class XrayReader(NCReader):
-    nco_base = staticmethod(open_dataset)
+
+    @staticmethod
+    def nco_base(*args, **kwargs):
+        kwargs.setdefault('convert_time', False)
+        return open_dataset(*args, **kwargs)
 
     def set_meta(self, var=None, **meta):
         """Set meta information.
@@ -2938,7 +2943,11 @@ class XrayReader(NCReader):
 
 
 class MFXrayReader(XrayReader):
-    nco_base = staticmethod(open_mfdataset)
+
+    @staticmethod
+    def nco_base(*args, **kwargs):
+        kwargs.setdefault('convert_time', False)
+        return open_mfdataset(*args, **kwargs)
 
 
 class MFNCReader(NCReader):

@@ -33,11 +33,12 @@ from matplotlib.tri import Triangulation, TriAnalyzer
 from nc_utils import chunk_shape_3D
 from .defaults import readers as defaults
 try:
-    from xray import open_dataset, open_mfdataset
+    from xray import Dataset as xrayDataset, open_dataset, open_mfdataset
 except ImportError as xray_io_error:
     def open_dataset(*args, **kwargs):
         raise ImportError(xray_io_error.message)
     open_mfdataset = open_dataset
+    xrayDataset = None
 
 
 defaultnames = defaults['dimnames']
@@ -2901,9 +2902,11 @@ class NCReader(ReaderBase):
 class XrayReader(NCReader):
 
     @staticmethod
-    def nco_base(*args, **kwargs):
+    def nco_base(filename_or_obj, *args, **kwargs):
         kwargs.setdefault('convert_time', False)
-        return open_dataset(*args, **kwargs)
+        if isinstance(filename_or_obj, xrayDataset):
+            return filename_or_obj
+        return open_dataset(filename_or_obj, *args, **kwargs)
 
     def set_meta(self, var=None, **meta):
         """Set meta information.

@@ -2903,7 +2903,7 @@ class XrayReader(NCReader):
 
     @staticmethod
     def nco_base(filename_or_obj, *args, **kwargs):
-        kwargs.setdefault('convert_time', False)
+        kwargs.setdefault('decode_times', False)
         if isinstance(filename_or_obj, xrayDataset):
             return filename_or_obj
         return open_dataset(filename_or_obj, *args, **kwargs)

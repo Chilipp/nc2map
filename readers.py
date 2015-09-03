@@ -2950,7 +2950,7 @@ class MFXrayReader(XrayReader):
 
     @staticmethod
     def nco_base(*args, **kwargs):
-        kwargs.setdefault('convert_time', False)
+        kwargs.setdefault('decode_times', False)
         return open_mfdataset(*args, **kwargs)
 
 

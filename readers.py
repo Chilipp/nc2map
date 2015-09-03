@@ -2813,21 +2813,24 @@ class NCReader(ReaderBase):
     def _set_grid_file(self, *args, **kwargs):
         """Sets the _grid_file from kwargs['filename'], kwargs['files'][0],
         args[0] and self.filepath()"""
+        success = False
         for key in ['filename', 'files', 'filename_or_obj']:
             try:
-                self._grid_file = kwargs.pop('filename')
-                return
+                self._grid_file = kwargs.pop(key)
+                success = True
+                break
             except KeyError:
                 pass
-        try:
-            self._grid_file = args[0]
-        except IndexError:
-            # use netCDF4.Dataset.filepath method
-            self._grid_file = self.filepath()
-        except ValueError:
-            warn("Could not get file name of grid file!")
-            self.logger.debug(exc_info=True)
-            return None
+        if not success:
+            try:
+                self._grid_file = args[0]
+            except IndexError:
+                # use netCDF4.Dataset.filepath method
+                self._grid_file = self.filepath()
+            except ValueError:
+                warn("Could not get file name of grid file!")
+                self.logger.debug(exc_info=True)
+                return
         try:
             self._grid_file = glob.glob(self._grid_file)[0]
         except TypeError:
@@ -2921,6 +2924,14 @@ class XrayReader(NCReader):
             self.nco.attrs.update(meta)
         else:
             self.nco.variables[var].update(meta)
+            
+    def _set_grid_file(self, filename_or_obj, *args, **kwargs):
+        if isinstance(filename_or_obj, xrayDataset):
+            self._grid_file = None
+            return
+        else:
+            return super(XrayReader, self)._set_grid_file(
+                filename_or_obj=filename_or_obj, *args, **kwargs)
 
     def get_meta(self, var=None):
         """Get meta information.

@@ -489,6 +489,17 @@ class Variable(object):
         return '\n'.join(strings)
 
 
+def _infer_interval_breaks(coord):
+    """
+    >>> _infer_interval_breaks(np.arange(5))
+    array([-0.5,  0.5,  1.5,  2.5,  3.5,  4.5])
+    """
+    deltas = 0.5 * (coord[1:] - coord[:-1])
+    first = coord[0] - deltas[0]
+    last = coord[-1] + deltas[-1]
+    return np.r_[[first], coord[:-1] + deltas, [last]]
+
+
 class DataField(object):
     """Multidimensional Data Field with latitude, longitude, time and level
     dimension.
@@ -591,7 +602,8 @@ class DataField(object):
             ilat = self.dimensions.index(self.__lat)
             ilon = self.dimensions.index(self.__lon)
             if ilat > ilon:
-                return np.meshgrid(self.lon, self.lat)
+                return np.meshgrid(*map(_infer_interval_breaks,
+                                        [self.lon, self.lat]))
             else:
                 return list(
                     np.roll(np.meshgrid(self.lon, self.lat), 1, axis=0))
@@ -2924,7 +2936,7 @@ class XrayReader(NCReader):
             self.nco.attrs.update(meta)
         else:
             self.nco.variables[var].update(meta)
-            
+
     def _set_grid_file(self, filename_or_obj, *args, **kwargs):
         if isinstance(filename_or_obj, xrayDataset):
             self._grid_file = None

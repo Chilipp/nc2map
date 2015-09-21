@@ -42,7 +42,8 @@ except ImportError as xray_io_error:
 
 
 defaultnames = defaults['dimnames']
-readers = ['XrayReader', 'MFXrayReader', 'NCReader', 'MFNCReader', 'ArrayReader']
+readers = ['NCReader', 'MFNCReader', 'XrayReader', 'MFXrayReader',
+           'ArrayReader']
 
 
 def auto_set_reader(*args, **kwargs):

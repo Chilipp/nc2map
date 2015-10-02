@@ -8,7 +8,7 @@ setup (name     = 'nc2map',
     license     = "GPLv2",
     description = """ ===================== """,
     platforms   = ["any"],
-    packages  = ["nc2map"],
+    packages  = ["nc2map","nc2map/mapos","nc2map/formatoptions","nc2map/data"],
     url         = "https://github.com/Chilipp/nc2map",
     keywords    = ['netcdf','data','science','plotting'],
     classifiers = [

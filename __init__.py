@@ -24,7 +24,7 @@ from _maps import Maps
 from _maps_manager import MapsManager
 from _cbar_manager import CbarManager
 from _basemap import Basemap
-from formatoptions import (
+from nc2map.formatoptions import (
     get_fmtkeys, show_fmtkeys, get_fmtdocs, show_fmtdocs, get_fnames,
     get_unique_vals, close_shapes)
 from ._cmap_ops import show_colormaps, get_cmap

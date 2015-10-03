@@ -9,7 +9,7 @@ from itertools import chain
 import matplotlib as mpl
 import numpy as np
 import matplotlib.pyplot as plt
-from nc2map.formatoptions import FmtBase
+from formatoptions import FmtBase
 from _maps_manager import MapsManager
 from mapos._map_base import _props, returnbounds
 from ._cmap_ops import get_cmap

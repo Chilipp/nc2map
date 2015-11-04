@@ -5,7 +5,7 @@ plot
 from copy import deepcopy
 from ..defaults import texts
 
-__author__ = "Philipp Sommer (philipp.sommer@stud.uni-hamburg.de)"
+__author__ = "Philipp Sommer (philipp.sommer@studium.uni-hamburg.de)"
 __version__ = '0.0'
 
 

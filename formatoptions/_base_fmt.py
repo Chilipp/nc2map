@@ -11,7 +11,7 @@ from ..defaults import BaseFormatter as default
 from ..defaults import texts
 from ..warning import warn
 
-__author__ = "Philipp Sommer (philipp.sommer@stud.uni-hamburg.de)"
+__author__ = "Philipp Sommer (philipp.sommer@studium.uni-hamburg.de)"
 __version__ = '0.0'
 
 _props = BaseFmtProperties()

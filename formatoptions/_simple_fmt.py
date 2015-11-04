@@ -6,7 +6,7 @@ from _basefmtproperties import BaseFmtProperties
 from _base_fmt import BaseFormatter
 from ..defaults import SimpleFmt as default
 
-__author__ = "Philipp Sommer (philipp.sommer@stud.uni-hamburg.de)"
+__author__ = "Philipp Sommer (philipp.sommer@studium.uni-hamburg.de)"
 __version__ = '0.0'
 
 

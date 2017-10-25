@@ -1,5 +1,8 @@
-nc2map.py
+DEPRECATED
 =========
+[![No Maintenance Intended](http://unmaintained.tech/badge.svg)](http://unmaintained.tech/)
+
+This module is not maintained. Please use the [psyplot](https://github.com/Chilipp/psyplot) module instead!
 
 Module to plot netCDF files (interactively)
 
